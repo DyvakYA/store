@@ -5,8 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dyvak</groupId>
-    <artifactId>Login</artifactId>
+    <artifactId>e-commerce-store</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <packaging>war</packaging>
+    <name>e-commerce-store</name>
 
     <build>
         <plugins>
@@ -21,9 +24,6 @@
         </plugins>
     </build>
 
-    <packaging>jar</packaging>
-    <name>Login</name>
-    <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version> 4.0.0-b01</version>
+            <version>4.0.0-b01</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
