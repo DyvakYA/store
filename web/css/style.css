@@ -1,0 +1,68 @@
+a.spoiler:after{
+    content: "[-]";
+}
+
+
+
+a.spoiler.collapsed:after{
+    content: "[+]";
+}
+
+.nav-tabs{
+    margin-bottom: 15px
+}
+
+.breadcrumb > li + li:before {
+    content: "\f105";
+    font-family: "FontAwesome"
+}
+
+@media screen and (max-width: 767px){
+    .masonry[data-columns]::before{
+        content: '1 .col-xs-12';
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px){
+        .masonry[data-columns]::before{
+        content: '2 .col-xs-6';
+    }
+}
+    
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+            .masonry[data-columns]::before{
+        content: '3 .col-xs-4';
+    }
+}
+    
+@media screen and (min-width: 1200px) {
+    .masonry[data-columns]::before{
+        content: '4 .col-xs-3';
+    }
+}
+
+.footer {padding: 1rem 0; margin-top: 2rem; font-size: 80%; text-align: left;}
+.footer p {margin: 0;}
+.footer-links {padding-left: 0; margin-bottom: 1rem;}
+.footer-links li {display: inline-block;}
+.footer a {font-weight: 500; color: inherit;}
+.footer-links li + li {margin-left: 1rem;}
+.bg-inverse {
+    background-color: #292b2c !important;
+}
+
+.much a {
+    padding: 2px;
+    border: 1px solid #e5e5e5;
+    text-decoration: none;
+}
+.much .jsminus {
+    background: #d73339;
+    color: #ffffff;
+    margin-right: -5px;
+}
+.much .jsplus {
+    background: #d73339;
+    color: #ffffff;
+    margin-left: -5px;
+}
