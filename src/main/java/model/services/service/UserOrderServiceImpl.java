@@ -1,7 +1,6 @@
 package model.services.service;
 
-import model.dao.DaoConnection;
-import model.dao.DaoFactory;
+import model.dao.daofactory.DaoFactory;
 import model.dao.UserOrderDao;
 import model.entities.Order;
 import model.entities.UserOrder;

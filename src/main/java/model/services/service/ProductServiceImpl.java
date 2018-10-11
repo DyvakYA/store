@@ -1,10 +1,11 @@
 package model.services.service;
 
-import model.dao.DaoConnection;
-import model.dao.DaoFactory;
+import model.dao.daofactory.DaoFactory;
 import model.dao.ProductDao;
 import model.entities.Product;
 import model.services.ProductService;
+import model.services.transactions.TransactionHandler;
+import model.services.transactions.TransactionHandlerImpl;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
  * Created by Dyvak on 21.01.2017.
  */
 public class ProductServiceImpl implements ProductService {
+
+    private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
 
     private DaoFactory daoFactory = DaoFactory.getInstance();
 
@@ -24,54 +27,50 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<Product> getAll() {
-        try (DaoConnection connection=daoFactory.getConnection()) {
+        try (DaoConnection connection = daoFactory.getConnection()) {
             connection.beginTransaction();
-            ProductDao productDao=daoFactory.createProductDao(connection);
+            ProductDao productDao = daoFactory.createProductDao(connection);
             return productDao.findAll();
         }
     }
 
     public void create(Product product) {
-        try(DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            ProductDao productDao=daoFactory.createProductDao(connection);
-            productDao.create(product);
-            connection.commitTransaction();
-        }
+        transactionHandler.runInTransaction(connection -> {
+            transactionHandler.createProductDao()
+                    .create(product);
+        });
     }
 
     public void update(Product product) {
-        try(DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            ProductDao productDao=daoFactory.createProductDao(connection);
-            productDao.update(product, product.getId());
-            connection.commitTransaction();
-        }
+        transactionHandler.runInTransaction(connection -> {
+            transactionHandler
+                    .createProductDao()
+                    .update(product);
+        });
     }
 
     public void delete(int id) {
-        try(DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            ProductDao productDao=daoFactory.createProductDao(connection);
-            productDao.delete(id);
-            connection.commitTransaction();
-        }
+        transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createProductDao()
+                    .delete(id);
+        });
     }
 
     public List<Product> getProductsByPrice(double doubleFirst, double doubleSecond) {
-        try(DaoConnection connection = daoFactory.getConnection()) {
+        try (DaoConnection connection = daoFactory.getConnection()) {
             connection.beginTransaction();
-            ProductDao productDao=daoFactory.createProductDao(connection);
-            long first = (long)doubleFirst * 100;
-            long second = (long)doubleSecond * 100;
+            ProductDao productDao = daoFactory.createProductDao(connection);
+            long first = (long) doubleFirst * 100;
+            long second = (long) doubleSecond * 100;
             return productDao.findProductsByPrice(first, second);
         }
     }
 
     public List<Product> getProductsByName(String name) {
-        try(DaoConnection connection = daoFactory.getConnection()) {
+        try (DaoConnection connection = daoFactory.getConnection()) {
             connection.beginTransaction();
-            ProductDao productDao=daoFactory.createProductDao(connection);
+            ProductDao productDao = daoFactory.createProductDao(connection);
             return productDao.findProductsByName(name);
         }
     }

@@ -85,8 +85,7 @@ public class JdbcUserOrderDao extends AbstractDao<UserOrder> implements UserOrde
 
     @Override
     public void create(UserOrder userOrder) {
-        checkForNull(userOrder);
-        checkIsUnsaved(userOrder);
+
         try (PreparedStatement query=connection.prepareStatement(CREATE_USER_ORDER_QUERY)) {
             query.setInt(1, userOrder.getUserId());
             query.setInt(2, userOrder.getOrderId());
@@ -98,8 +97,7 @@ public class JdbcUserOrderDao extends AbstractDao<UserOrder> implements UserOrde
 
     @Override
     public void update(UserOrder userOrder, int id) {
-        checkForNull(userOrder);
-        checkIsSaved(userOrder);
+
         try (PreparedStatement query=connection.prepareStatement(UPDATE_USER_ORDERS_QUERY)) {
             query.setInt(1, userOrder.getOrderId());
             query.setInt(2, id);

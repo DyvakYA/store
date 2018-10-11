@@ -1,7 +1,6 @@
 package testService;
 
-import model.dao.DaoConnection;
-import model.dao.DaoFactory;
+import model.dao.daofactory.DaoFactory;
 import model.dao.UserDao;
 import model.entities.User;
 import model.services.exception.ServiceException;

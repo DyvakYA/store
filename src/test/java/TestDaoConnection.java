@@ -1,5 +1,3 @@
-import model.dao.DaoConnection;
-import model.dao.jdbc.JdbcDaoConnection;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

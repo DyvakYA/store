@@ -1,6 +1,7 @@
 package model.services.service;
 
 import model.dao.*;
+import model.dao.daofactory.DaoFactory;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.Product;

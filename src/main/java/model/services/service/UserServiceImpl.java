@@ -1,6 +1,7 @@
 package model.services.service;
 
 import model.dao.*;
+import model.dao.daofactory.DaoFactory;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.Product;
@@ -20,7 +21,6 @@ import static model.services.exception.ServiceException.USER_ALREADY_EXISTS;
 public class UserServiceImpl implements UserService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
-
 
     private DaoFactory daoFactory = DaoFactory.getInstance();
 
@@ -114,37 +114,21 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//
-//        try(
-//    DaoConnection connection = daoFactory.getConnection())
-//
-//    {
-//        connection.beginTransaction();
-//        UserDao userDao = daoFactory.createUserDao(connection);
-//        checkIfUserAlreadyExists(user.getEmail(), userDao);
-//        userDao.create(user);
-//        connection.commitTransaction();
-//    }
-
-}
-
     public void update(User user) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserDao userDao = daoFactory.createUserDao(connection);
-            user.setPasswordHash(userDao.getPasswordForUser(user));
-            userDao.update(user, user.getId());
-            connection.commitTransaction();
-        }
+
+        transactionHandler.runInTransaction(connection -> {
+            transactionHandler.createUserDao()
+                    .update(user);
+        });
     }
 
     public void delete(int id) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserDao userDao = daoFactory.createUserDao(connection);
-            userDao.delete(id);
-            connection.commitTransaction();
-        }
+
+        transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createUserDao()
+                    .delete(id);
+        });
     }
 
     private void checkIfUserAlreadyExists(String email, UserDao userDao) {

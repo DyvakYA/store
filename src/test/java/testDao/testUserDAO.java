@@ -1,7 +1,6 @@
 package testDao;
 
-import model.dao.DaoConnection;
-import model.dao.jdbc.JdbcDaoFactory;
+import model.dao.daofactory.JdbcDaoFactory;
 import model.dao.jdbc.JdbcUserDao;
 import model.entities.User;
 import org.junit.Assert;
