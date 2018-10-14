@@ -1,8 +1,7 @@
 package controller.commands.order;
 
-import controller.commands.Command;
 import controller.commands.AbstractCommand;
-import controller.commands.validators.order.CreateOrderCommandValidator;
+import controller.commands.Command;
 import model.entities.Order;
 import model.extras.Localization;
 import model.services.OrderService;
@@ -17,7 +16,6 @@ import static model.constants.AttributesHolder.ORDER_STATUS_ATTRIBUTE;
 import static model.constants.AttributesHolder.RESULT_ATTRIBUTE;
 import static model.constants.MsgHolder.CREATE_ORDER_SUCCESSFUL_MSG;
 import static model.constants.UrlHolder.ORDER_JSP;
-import static model.constants.UrlHolder.REDIRECTED;
 
 /**
  * This class represents admin create order.
@@ -26,16 +24,13 @@ import static model.constants.UrlHolder.REDIRECTED;
  */
 public class CreateOrderCommand extends AbstractCommand implements Command {
 
-    private OrderService orderService=OrderServiceImpl.getInstance();
+    private OrderService orderService = OrderServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        if (!new CreateOrderCommandValidator().validate(request, response)) {
-            return REDIRECTED;
-        }
-        Order order = new Order.Builder()
+        Order order = Order.builder()
                 .setOrderStatus(request.getParameter(ORDER_STATUS_ATTRIBUTE))
                 .setDate(new Timestamp(System.currentTimeMillis()))
                 .build();

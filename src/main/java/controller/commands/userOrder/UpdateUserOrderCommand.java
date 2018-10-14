@@ -2,7 +2,6 @@ package controller.commands.userOrder;
 
 import controller.commands.AbstractCommand;
 import controller.commands.Command;
-import controller.commands.validators.userOrder.UpdateUserOrderCommandValidator;
 import model.entities.UserOrder;
 import model.extras.Localization;
 import model.services.UserOrderService;
@@ -14,7 +13,6 @@ import java.io.IOException;
 
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.UPDATE_USER_ORDERS_SUCCESSFUL_MSG;
-import static model.constants.UrlHolder.REDIRECTED;
 import static model.constants.UrlHolder.USER_ORDER_DESTINATION_PAGE;
 
 /**
@@ -30,9 +28,6 @@ public class UpdateUserOrderCommand extends AbstractCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        if (!new UpdateUserOrderCommandValidator().validate(request, response)) {
-            return REDIRECTED;
-        }
         UserOrder userOrder = new UserOrder.Builder()
                 .setId(Integer.parseInt(USER_ORDER_ID_ATTRIBUTE))
                 .setUserId(Integer.parseInt(USER_ID_ATTRIBUTE))

@@ -1,8 +1,7 @@
 package controller.commands.order;
 
-import controller.commands.Command;
 import controller.commands.AbstractCommand;
-import controller.commands.validators.order.UpdateOrderCommandValidator;
+import controller.commands.Command;
 import model.entities.Order;
 import model.extras.Localization;
 import model.services.OrderService;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.UPDATE_ORDER_SUCCESSFUL_MSG;
 import static model.constants.UrlHolder.ORDER_JSP;
-import static model.constants.UrlHolder.REDIRECTED;
 
 /**
  * This class represents admin's update order.
@@ -24,16 +22,13 @@ import static model.constants.UrlHolder.REDIRECTED;
  */
 public class AdminUpdateOrderCommand extends AbstractCommand implements Command {
 
-    private OrderService orderService=OrderServiceImpl.getInstance();
+    private OrderService orderService = OrderServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        if (!new UpdateOrderCommandValidator().validate(request, response)) {
-            return REDIRECTED;
-        }
-        Order order= new Order.Builder()
+        Order order = Order.builder()
                 .setId(Integer.valueOf(request.getParameter(ORDER_ID_ATTRIBUTE)))
                 .setOrderStatus(request.getParameter(ORDER_STATUS_ATTRIBUTE))
                 .build();

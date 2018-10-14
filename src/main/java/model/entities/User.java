@@ -11,64 +11,31 @@ public class User implements Identified {
 
     private int id;
     private String name;
-    /**
-     * Email field is used as login
-     */
     private String email;
-    private String passwordHash;
+    private String password;
     boolean isAdmin;
     boolean isBlocked;
 
-    public static class Builder {
-
-        User instance=new User();
-
-        public Builder setId(int id) {
-            instance.id=id;
-            return this;
-        }
-
-        public Builder setName(String name) {
-            instance.name=name;
-            return this;
-        }
-
-        public Builder setEmail(String email) {
-            instance.email=email;
-            return this;
-        }
-
-        public Builder setPasswordHash(String password) {
-            instance.passwordHash=calcPasswordHash(password);
-            return this;
-        }
-
-        public Builder setPasswordString(String password) {
-            instance.passwordHash=password;
-            return this;
-        }
-
-        public Builder setAdmin(boolean isAdmin) {
-            instance.isAdmin=isAdmin;
-            return this;
-        }
-
-        public Builder setBlocked(boolean isBlocked) {
-            instance.isBlocked=isBlocked;
-            return this;
-        }
-
-        public User build() {
-            return instance;
-        }
+    public User(int id, String name, String email, String password, boolean isAdmin, boolean isBlocked) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.isAdmin = isAdmin;
+        this.isBlocked = isBlocked;
     }
+
+    public static UserBuilder builder(){
+        return new UserBuilder();
+    }
+
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-        this.id=id;
+        this.id = id;
     }
 
     public String getName() {
@@ -76,7 +43,7 @@ public class User implements Identified {
     }
 
     public void setName(String name) {
-        this.name=name;
+        this.name = name;
     }
 
     public String getEmail() {
@@ -84,15 +51,15 @@ public class User implements Identified {
     }
 
     public void setEmail(String email) {
-        this.email=email;
+        this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash=passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isAdmin() {
@@ -100,7 +67,7 @@ public class User implements Identified {
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin=admin;
+        isAdmin = admin;
     }
 
     public boolean isBlocked() {
@@ -108,7 +75,7 @@ public class User implements Identified {
     }
 
     public void setBlocked(boolean blocked) {
-        isBlocked=blocked;
+        isBlocked = blocked;
     }
 
     public static String calcPasswordHash(String password) {
@@ -116,9 +83,9 @@ public class User implements Identified {
     }
 
     public static Integer passwordEncryptor(String password) {
-        Integer seed=131;
-        Integer hash=12;
-        hash=seed * hash + password.hashCode();
+        Integer seed = 131;
+        Integer hash = 12;
+        hash = seed * hash + password.hashCode();
         return hash;
     }
 
@@ -127,24 +94,24 @@ public class User implements Identified {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
 
-        User user=(User) o;
+        User user = (User) o;
 
         if (id != user.id) return false;
         if (isAdmin != user.isAdmin) return false;
         if (isBlocked != user.isBlocked) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        return passwordHash != null ? passwordHash.equals(user.passwordHash) : user.passwordHash == null;
+        return password != null ? password.equals(user.password) : user.password == null;
     }
 
     @Override
     public int hashCode() {
-        int result=id;
-        result=31 * result + (name != null ? name.hashCode() : 0);
-        result=31 * result + (email != null ? email.hashCode() : 0);
-        result=31 * result + (passwordHash != null ? passwordHash.hashCode() : 0);
-        result=31 * result + (isAdmin ? 1 : 0);
-        result=31 * result + (isBlocked ? 1 : 0);
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (isAdmin ? 1 : 0);
+        result = 31 * result + (isBlocked ? 1 : 0);
         return result;
     }
 
@@ -154,7 +121,7 @@ public class User implements Identified {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
+                ", passwordHash='" + password + '\'' +
                 ", isAdmin=" + isAdmin +
                 ", isBlocked=" + isBlocked +
                 '}';

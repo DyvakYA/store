@@ -1,8 +1,7 @@
 package controller.commands.user;
 
-import controller.commands.Command;
 import controller.commands.AbstractCommand;
-import controller.commands.validators.user.AuthenticateUserCommandValidator;
+import controller.commands.Command;
 import model.entities.User;
 import model.extras.Localization;
 import model.services.UserService;
@@ -30,30 +29,27 @@ public class LoginCommand extends AbstractCommand implements Command {
 
     private static final String USER_LOGGED_IN = "%s id=%s LOGGED IN.";
 
-    private UserService userService=UserServiceImpl.getInstance();
+    private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        if (!new AuthenticateUserCommandValidator().validate(request, response)) {
-            return REDIRECTED;
-        }
         String result;
-        String destinationPage=INDEX;
-        String email=request.getParameter(USER_EMAIL_ATTRIBUTE);
-        String password=request.getParameter(USER_AUTHENTICATE_ATTRIBUTE);
+        String destinationPage = INDEX;
+        String email = request.getParameter(USER_EMAIL_ATTRIBUTE);
+        String password = request.getParameter(USER_AUTHENTICATE_ATTRIBUTE);
         if (email != null && password != null) {
-            Optional<User> optionalUser=userService.login(email, password);
+            Optional<User> optionalUser = userService.login(email, password);
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
                 logger.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
-                result=Localization.getInstance()
+                result = Localization.getInstance()
                         .getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
                 request.getSession().setAttribute(USER_SESSION_ATTRIBUTE, user);
                 destinationPage = getDestinationPageByUserRole(user, request);
             } else {
-                result=Localization.getInstance().getLocalizedMessage(request, LOGIN_USER_ERROR_MSG);
+                result = Localization.getInstance().getLocalizedMessage(request, LOGIN_USER_ERROR_MSG);
             }
             request.setAttribute(RESULT_ATTRIBUTE, result);
         }
@@ -63,7 +59,7 @@ public class LoginCommand extends AbstractCommand implements Command {
     private String getDestinationPageByUserRole(User user, HttpServletRequest request) {
         if (user.isAdmin()) {
             return roleCheckerSetAttributes(USER_JSP, request);
-        }else if (!user.isAdmin()) {
+        } else if (!user.isAdmin()) {
             return roleCheckerSetAttributes(ORDER_JSP, request);
         }
         return null;

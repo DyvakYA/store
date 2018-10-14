@@ -2,7 +2,6 @@ package controller.commands.orderProduct;
 
 import controller.commands.AbstractCommand;
 import controller.commands.Command;
-import controller.commands.validators.orderProduct.CreateOrderProductCommandValidator;
 import model.entities.OrderProduct;
 import model.extras.Localization;
 import model.services.OrderProductService;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.CREATE_ORDER_PRODUCTS_SUCCESSFUL_MSG;
 import static model.constants.UrlHolder.ORDER_PRODUCT_DESTINATION_PAGE;
-import static model.constants.UrlHolder.REDIRECTED;
 
 /**
  * This class represents creating OrderProduct command.
@@ -30,9 +28,6 @@ public class CreateOrderProductCommand extends AbstractCommand implements Comman
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        if (!new CreateOrderProductCommandValidator().validate(request, response)) {
-            return REDIRECTED;
-        }
         OrderProduct orderProduct = new OrderProduct.Builder()
                 .setOrderId(Integer.parseInt(request.getParameter(ORDER_ID_ATTRIBUTE)))
                 .setProductId(Integer.valueOf(request.getParameter(PRODUCT_ID_ATTRIBUTE)))

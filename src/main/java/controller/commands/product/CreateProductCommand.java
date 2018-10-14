@@ -1,8 +1,7 @@
 package controller.commands.product;
 
-import controller.commands.Command;
 import controller.commands.AbstractCommand;
-import controller.commands.validators.product.CreateProductCommandValidator;
+import controller.commands.Command;
 import model.entities.Product;
 import model.extras.Localization;
 import model.services.ProductService;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.CREATE_PRODUCT_SUCCESSFUL_MSG;
 import static model.constants.UrlHolder.PRODUCT_JSP;
-import static model.constants.UrlHolder.REDIRECTED;
 
 /**
  * This class represents creating Product command.
@@ -30,9 +28,6 @@ public class CreateProductCommand extends AbstractCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        if (!new CreateProductCommandValidator().validate(request, response)) {
-            return REDIRECTED;
-        }
         Product product = new Product.Builder()
                 .setName(request.getParameter(PRODUCT_NAME_ATTRIBUTE))
                 .setDescription(request.getParameter(PRODUCT_DESCRIPTION_ATTRIBUTE))

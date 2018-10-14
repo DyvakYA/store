@@ -23,7 +23,7 @@ class ResultSetExtractor {
     }
 
     Order getOrderFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Order.Builder()
+        return Order.builder()
                 .setId(resultSet.getInt(ORDER_ID_ATTRIBUTE))
                 .setOrderStatus(resultSet.getString(ORDER_STATUS_ATTRIBUTE))
                 .setDate(resultSet.getTimestamp(ORDER_DATE_ATTRIBUTE))
@@ -32,7 +32,7 @@ class ResultSetExtractor {
     }
 
     Product getProductFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Product.Builder()
+        return Product.builder()
                 .setId(resultSet.getInt(PRODUCT_ID_ATTRIBUTE))
                 .setName(resultSet.getString(PRODUCT_NAME_ATTRIBUTE))
                 .setDescription(resultSet.getString(PRODUCT_DESCRIPTION_ATTRIBUTE))
@@ -41,11 +41,11 @@ class ResultSetExtractor {
     }
 
     User getUserFromResultSet(ResultSet resultSet) throws SQLException {
-        return new User.Builder()
+        return User.builder()
                 .setId(resultSet.getInt(USER_ID_ATTRIBUTE))
                 .setName(resultSet.getString(USER_NAME_ATTRIBUTE))
                 .setEmail(resultSet.getString(USER_EMAIL_ATTRIBUTE))
-                .setPasswordString(resultSet.getString(USER_AUTHENTICATE_ATTRIBUTE))
+                .setPassword(resultSet.getString(USER_AUTHENTICATE_ATTRIBUTE))
                 .setAdmin(resultSet.getBoolean(USER_ADMIN_ATTRIBUTE))
                 .setBlocked(resultSet.getBoolean(USER_BLOCKED_ATTRIBUTE))
                 .build();

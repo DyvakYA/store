@@ -1,8 +1,7 @@
 package controller.commands.user;
 
-import controller.commands.Command;
 import controller.commands.AbstractCommand;
-import controller.commands.validators.user.UserAddProductToOrderValidator;
+import controller.commands.Command;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.User;
@@ -29,30 +28,27 @@ import static model.constants.UrlHolder.*;
  */
 public class UserAddProductToOrderCommand extends AbstractCommand implements Command {
 
-    private OrderService orderService=OrderServiceImpl.getInstance();
-    private OrderProductService orderProductService=OrderProductServiceImpl.getInstance();
+    private OrderService orderService = OrderServiceImpl.getInstance();
+    private OrderProductService orderProductService = OrderProductServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        if (!new UserAddProductToOrderValidator().validate(request, response)) {
-            return REDIRECTED;
-        }
-        HttpSession session=request.getSession();
-        User user=(User) session.getAttribute(USER_SESSION_ATTRIBUTE);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(USER_SESSION_ATTRIBUTE);
 
-        int productId=Integer.parseInt(request.getParameter(PRODUCT_ID_ATTRIBUTE));
+        int productId = Integer.parseInt(request.getParameter(PRODUCT_ID_ATTRIBUTE));
         int orderId;
         int userId;
-        int quantity=Integer.parseInt(request.getParameter(QUANTITY));
+        int quantity = Integer.parseInt(request.getParameter(QUANTITY));
 
         if (user == null) {
             //set error message when user = null
             request.setAttribute(RESULT_ATTRIBUTE,
                     Localization.getInstance().getLocalizedMessage
                             (request, USER_NOT_AUTHORIZED));
-            return roleCheckerSetAttributes(PRODUCT_JSP,request);
+            return roleCheckerSetAttributes(PRODUCT_JSP, request);
         } else if (user.isBlocked()) {
             //set error message when user = null
             request.setAttribute(RESULT_ATTRIBUTE,
@@ -64,29 +60,29 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
             //action when user != null
             if (session.getAttribute(ORDER_ID_ATTRIBUTE) == null) {
                 //create Order
-                Order order=orderService.createDefaultOrder();
+                Order order = orderService.createDefaultOrder();
                 //set attribute order_id
-                orderId=order.getId();
+                orderId = order.getId();
                 session.setAttribute(ORDER_ID_ATTRIBUTE, orderId);
                 //create UserOrder + OrderProduct
                 orderProductService.createUserOrderAndOrderProduct(userId, orderId, productId, quantity);
                 request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                         .getLocalizedMessage(request, CREATE_USER_ORDER_SUCCESSFUL_MSG));
             } else if (session.getAttribute(ORDER_ID_ATTRIBUTE) != null) {
-                orderId=Integer.parseInt(String.valueOf(session.getAttribute(ORDER_ID_ATTRIBUTE)));
+                orderId = Integer.parseInt(String.valueOf(session.getAttribute(ORDER_ID_ATTRIBUTE)));
                 OrderIdAttributeNotNull(request, productId, orderId, quantity);
             }
         }
-        return roleCheckerSetAttributes(ORDER_JSP,request);
+        return roleCheckerSetAttributes(ORDER_JSP, request);
     }
 
     private void OrderIdAttributeNotNull(HttpServletRequest request, int productId, int orderId, int quantity) {
         //get orderProduct from data base
-        Optional<OrderProduct> orderProductFromBase=orderProductService
+        Optional<OrderProduct> orderProductFromBase = orderProductService
                 .getOrderProductByOrderIdAndProductId(orderId, productId);
         //action when orderProduct exist in base
         if (orderProductFromBase.isPresent()) {
-            OrderProduct orderProduct=orderProductFromBase.get();
+            OrderProduct orderProduct = orderProductFromBase.get();
             orderProductService.increaseQuantityWhenAddProduct(orderProduct, quantity);
             request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                     .getLocalizedMessage(request, AMOUNT_INCREASED));
@@ -94,7 +90,7 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
         }
         if (!orderProductFromBase.isPresent()) {
             //create orderProduct
-            OrderProduct orderProduct=new OrderProduct.Builder()
+            OrderProduct orderProduct = new OrderProduct.Builder()
                     .setOrderId(orderId)
                     .setProductId(productId)
                     .setQuantity(quantity)

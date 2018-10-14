@@ -1,6 +1,8 @@
 package model.services.service;
 
-import model.dao.*;
+import model.dao.OrderProductDao;
+import model.dao.UserDao;
+import model.dao.UserOrderDao;
 import model.dao.daofactory.DaoFactory;
 import model.entities.Order;
 import model.entities.OrderProduct;
@@ -37,29 +39,30 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<User> login(String email, String password) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserDao userDao = daoFactory.createUserDao(connection);
-            return Optional.ofNullable(userDao.getUserByEmail(email)
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createUserDao()
+                    .getUserByEmail(email)
                     .filter(user -> (user.calcPasswordHash(password)).equals(user.getPasswordHash()))
-                    .orElseThrow(() -> new ServiceException(USER_ALREADY_EXISTS)));
-        }
+                    .orElseThrow(() -> new ServiceException(USER_ALREADY_EXISTS));
+        });
     }
 
     public List<User> getAll() {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserDao userDao = daoFactory.createUserDao(connection);
-            return userDao.findAll();
-        }
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createUserDao()
+                    .findAll();
+        });
     }
 
+
     public List<User> getAllUsersWithOrders() {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserDao userDao = daoFactory.createUserDao(connection);
-            return userDao.findAllUsersWithOrders();
-        }
+//        try (DaoConnection connection = daoFactory.getConnection()) {
+//            connection.beginTransaction();
+//            UserDao userDao = daoFactory.createUserDao(connection);
+//            return userDao.findAllUsersWithOrders();
+//        }
     }
 
     public Optional<User> getByEmail(String email) {

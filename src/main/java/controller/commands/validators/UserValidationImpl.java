@@ -1,7 +1,7 @@
 package controller.commands.validators;
 
-import validationSample.User;
-import validationSample.ValidationUtil;
+import controller.commands.ValidationUtil;
+import model.entities.User;
 
 /**
  * Created by User on 5/31/2018.

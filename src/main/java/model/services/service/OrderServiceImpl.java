@@ -1,7 +1,8 @@
 package model.services.service;
 
-import model.dao.daofactory.DaoFactory;
 import model.dao.OrderDao;
+import model.dao.connection.DaoConnection;
+import model.dao.daofactory.DaoFactory;
 import model.entities.Order;
 import model.services.OrderService;
 import model.services.transactions.TransactionHandler;
@@ -42,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
         try (DaoConnection connection = daoFactory.getConnection()) {
             connection.beginTransaction();
             OrderDao orderDao = daoFactory.createOrderDao(connection);
-            order = new Order.Builder()
+            order = Order.builder()
                     .setOrderStatus(STARTED)
                     .setDate(new Date())
                     .build();

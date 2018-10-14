@@ -14,43 +14,19 @@ public class Product implements Identified {
     private String description;
     private long price;
 
-    public static class Builder {
-        Product instance=new Product();
+    public Product(int id, String name, String description, long price) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
 
-        public Builder setId(int id) {
-            instance.id=id;
-            return this;
-        }
-
-        public Builder setName(String name) {
-            instance.name=name;
-            return this;
-        }
-
-        public Builder setDescription(String description) {
-            instance.description=description;
-            return this;
-        }
-
-        public Builder setDoublePrice(double price) {
-            instance.price=(long)price*100;
-            return this;
-        }
-
-        public Builder setPrice(long price) {
-            instance.price=price;
-            return this;
-        }
-
-        public Product build() {
-            return instance;
-        }
-
-
+    public static ProductBuilder builder() {
+        return new ProductBuilder();
     }
 
     public void setId(int id) {
-        this.id=id;
+        this.id = id;
     }
 
     public int getId() {
@@ -62,7 +38,7 @@ public class Product implements Identified {
     }
 
     public void setName(String name) {
-        this.name=name;
+        this.name = name;
     }
 
     public String getDescription() {
@@ -70,7 +46,7 @@ public class Product implements Identified {
     }
 
     public void setDescription(String description) {
-        this.description=description;
+        this.description = description;
     }
 
     public long getPrice() {
@@ -84,7 +60,7 @@ public class Product implements Identified {
     }
 
     public void setPrice(long price) {
-        this.price=price;
+        this.price = price;
     }
 
     @Override
@@ -92,7 +68,7 @@ public class Product implements Identified {
         if (this == o) return true;
         if (!(o instanceof Product)) return false;
 
-        Product product=(Product) o;
+        Product product = (Product) o;
 
         if (id != product.id) return false;
         if (price != product.price) return false;
@@ -102,10 +78,10 @@ public class Product implements Identified {
 
     @Override
     public int hashCode() {
-        int result=id;
-        result=31 * result + (name != null ? name.hashCode() : 0);
-        result=31 * result + (description != null ? description.hashCode() : 0);
-        result=31 * result + (int) (price ^ (price >>> 32));
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (int) (price ^ (price >>> 32));
         return result;
     }
 
