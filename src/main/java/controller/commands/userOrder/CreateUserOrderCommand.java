@@ -28,7 +28,7 @@ public class CreateUserOrderCommand extends AbstractCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        UserOrder userOrder = new UserOrder.Builder()
+        UserOrder userOrder = UserOrder.builder()
                 .setUserId(Integer.parseInt((request.getParameter(USER_ID_ATTRIBUTE))))
                 .setOrderId(Integer.parseInt((request.getParameter(ORDER_ID_ATTRIBUTE))))
                 .build();

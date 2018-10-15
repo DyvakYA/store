@@ -28,7 +28,7 @@ public class CreateProductCommand extends AbstractCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        Product product = new Product.Builder()
+        Product product = Product.builder()
                 .setName(request.getParameter(PRODUCT_NAME_ATTRIBUTE))
                 .setDescription(request.getParameter(PRODUCT_DESCRIPTION_ATTRIBUTE))
                 .setDoublePrice(Double.parseDouble(request.getParameter(PRODUCT_PRICE_ATTRIBUTE)))

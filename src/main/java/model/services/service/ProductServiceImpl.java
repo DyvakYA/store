@@ -1,7 +1,6 @@
 package model.services.service;
 
 import model.dao.daofactory.DaoFactory;
-import model.dao.ProductDao;
 import model.entities.Product;
 import model.services.ProductService;
 import model.services.transactions.TransactionHandler;
@@ -16,8 +15,6 @@ public class ProductServiceImpl implements ProductService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
 
-    private DaoFactory daoFactory = DaoFactory.getInstance();
-
     private static class Holder {
         static final ProductServiceImpl INSTANCE = new ProductServiceImpl();
     }
@@ -27,16 +24,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<Product> getAll() {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            ProductDao productDao = daoFactory.createProductDao(connection);
-            return productDao.findAll();
-        }
+
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createProductDao()
+                    .findAll();
+        });
     }
 
     public void create(Product product) {
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler.createProductDao()
+            transactionHandler
+                    .createProductDao()
                     .create(product);
         });
     }
@@ -58,20 +57,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<Product> getProductsByPrice(double doubleFirst, double doubleSecond) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            ProductDao productDao = daoFactory.createProductDao(connection);
-            long first = (long) doubleFirst * 100;
-            long second = (long) doubleSecond * 100;
-            return productDao.findProductsByPrice(first, second);
-        }
+
+        long first = (long) doubleFirst * 100;
+        long second = (long) doubleSecond * 100;
+
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createProductDao()
+                    .findProductByPrice(first, second);
+        });
     }
 
     public List<Product> getProductsByName(String name) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            ProductDao productDao = daoFactory.createProductDao(connection);
-            return productDao.findProductsByName(name);
-        }
+
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createProductDao()
+                    .findProductsByName(name);
+        });
     }
 }

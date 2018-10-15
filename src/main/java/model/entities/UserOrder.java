@@ -11,35 +11,23 @@ public class UserOrder implements Identified {
     private int userId;
     private int orderId;
 
-    public static class Builder {
-        UserOrder instance=new UserOrder();
-
-        public Builder setId(int id) {
-            instance.id=id;
-            return this;
-        }
-
-        public Builder setUserId(int userId) {
-            instance.userId=userId;
-            return this;
-        }
-
-        public Builder setOrderId(int orderId) {
-            instance.orderId=orderId;
-            return this;
-        }
-
-        public UserOrder build() {
-            return instance;
-        }
+    public UserOrder(int id, int userId, int orderId) {
+        this.id = id;
+        this.userId = userId;
+        this.orderId = orderId;
     }
+
+    public static UserOrderBuilder builder() {
+        return new UserOrderBuilder();
+    }
+
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-        this.id=id;
+        this.id = id;
     }
 
     public int getUserId() {
@@ -47,7 +35,7 @@ public class UserOrder implements Identified {
     }
 
     public void setUserId(int userId) {
-        this.userId=userId;
+        this.userId = userId;
     }
 
     public int getOrderId() {
@@ -55,7 +43,7 @@ public class UserOrder implements Identified {
     }
 
     public void setOrderId(int orderId) {
-        this.orderId=orderId;
+        this.orderId = orderId;
     }
 
     @Override
@@ -63,7 +51,7 @@ public class UserOrder implements Identified {
         if (this == o) return true;
         if (!(o instanceof UserOrder)) return false;
 
-        UserOrder userOrder=(UserOrder) o;
+        UserOrder userOrder = (UserOrder) o;
 
         if (id != userOrder.id) return false;
         if (userId != userOrder.userId) return false;
@@ -72,9 +60,9 @@ public class UserOrder implements Identified {
 
     @Override
     public int hashCode() {
-        int result=id;
-        result=31 * result + userId;
-        result=31 * result + orderId;
+        int result = id;
+        result = 31 * result + userId;
+        result = 31 * result + orderId;
         return result;
     }
 

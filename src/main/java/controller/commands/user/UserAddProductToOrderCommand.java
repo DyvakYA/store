@@ -90,7 +90,7 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
         }
         if (!orderProductFromBase.isPresent()) {
             //create orderProduct
-            OrderProduct orderProduct = new OrderProduct.Builder()
+            OrderProduct orderProduct = OrderProduct.builder()
                     .setOrderId(orderId)
                     .setProductId(productId)
                     .setQuantity(quantity)

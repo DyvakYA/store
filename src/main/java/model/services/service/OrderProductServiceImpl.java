@@ -2,9 +2,7 @@ package model.services.service;
 
 import model.dao.OrderDao;
 import model.dao.OrderProductDao;
-import model.dao.UserOrderDao;
 import model.dao.connection.DaoConnection;
-import model.dao.daofactory.DaoFactory;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.Product;
@@ -23,8 +21,6 @@ import java.util.Optional;
  */
 public class OrderProductServiceImpl implements OrderProductService {
 
-    private DaoFactory daoFactory = DaoFactory.getInstance();
-
     private static class Holder {
         static final OrderProductServiceImpl INSTANCE = new OrderProductServiceImpl();
     }
@@ -36,7 +32,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     public List<OrderProduct> getAll() {
-        return transactionHandler.runWithOutCommit(connection -> {
+        return (List<OrderProduct>) transactionHandler.runWithReturnStatement(connection -> {
             transactionHandler
                     .createOrderProductDao()
                     .findAll();
@@ -44,26 +40,36 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     public void createUserOrderAndOrderProduct(int userId, int orderId, int productId, int quantity) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserOrderDao userOrderDao = daoFactory.createUserOrderDao(connection);
-            UserOrder userOrder = new UserOrder.Builder()
+
+        transactionHandler.runInTransaction(connection -> {
+
+            UserOrder userOrder = UserOrder.builder()
                     .setUserId(userId)
                     .setOrderId(orderId)
                     .build();
-            userOrderDao.create(userOrder);
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            OrderProduct orderProduct = new OrderProduct.Builder()
+            transactionHandler.createUserOrderDao().create(userOrder);
+
+            OrderProduct orderProduct = OrderProduct.builder()
                     .setOrderId(orderId)
                     .setProductId(productId)
                     .setQuantity(quantity)
                     .build();
+
+            long productPrice = transactionHandler
+                    .createOrderProductDao()
+                    .getProductPrice(orderProduct);
+
+
             orderProduct.setProductSum((long) orderProduct.getQuantity() *
-                    orderProductDao.getProductPrice(orderProduct));
-            orderProductDao.create(orderProduct);
-            setOrderTotalPrice(orderProduct, connection, orderProductDao);
-            connection.commitTransaction();
-        }
+                    productPrice);
+
+            transactionHandler
+                    .createOrderProductDao()
+                    .create(orderProduct);
+
+
+            //setOrderTotalPrice(orderProduct, connection, orderProductDao);
+        });
     }
 
     public void create(OrderProduct orderProduct) {
@@ -75,6 +81,8 @@ public class OrderProductServiceImpl implements OrderProductService {
             orderProductDao.create(orderProduct);
             setOrderTotalPrice(orderProduct, connection, orderProductDao);
             connection.commitTransaction();
+
+
         }
     }
 
@@ -113,12 +121,10 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     public void delete(int id) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            orderProductDao.delete(id);
-            connection.commitTransaction();
-        }
+
+        transactionHandler.runInTransaction(connection -> {
+            transactionHandler.createOrderProductDao().delete(id);
+        });
     }
 
     public Optional<OrderProduct> findById(int id) {

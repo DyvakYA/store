@@ -22,13 +22,13 @@ import static model.constants.UrlHolder.ORDER_PRODUCT_DESTINATION_PAGE;
  */
 public class UpdateOrderProductCommand extends AbstractCommand implements Command {
 
-    private OrderProductService orderProductsService=OrderProductServiceImpl.getInstance();
+    private OrderProductService orderProductsService = OrderProductServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        OrderProduct orderProduct= new OrderProduct.Builder()
+        OrderProduct orderProduct = OrderProduct.builder()
                 .setId(Integer.parseInt(request.getParameter(ORDER_PRODUCT_ID_ATTRIBUTE)))
                 .setOrderId(Integer.parseInt((request.getParameter(ORDER_ID_ATTRIBUTE))))
                 .setProductId(Integer.parseInt(request.getParameter(PRODUCT_ID_ATTRIBUTE)))

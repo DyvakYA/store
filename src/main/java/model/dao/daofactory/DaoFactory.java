@@ -2,9 +2,7 @@ package model.dao.daofactory;
 
 import model.dao.GenericDao;
 import model.dao.connection.DaoConnection;
-import model.entities.Order;
-import model.entities.Product;
-import model.entities.User;
+import model.entities.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +22,10 @@ public abstract class DaoFactory {
     public abstract GenericDao<User> createUserDao(Connection connection);
 
     public abstract GenericDao<Order> createOrderDao(Connection connection);
+
+    public abstract GenericDao<OrderProduct> createOrderProductDao(Connection connection);
+
+    public abstract GenericDao<UserOrder> createUserOrderDao(Connection connection);
 
     public static final String DB_FILE = "/db.properties";
     private static final String DB_FACTORY_CLASS = "factory.class";

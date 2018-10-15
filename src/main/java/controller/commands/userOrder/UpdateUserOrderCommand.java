@@ -28,7 +28,7 @@ public class UpdateUserOrderCommand extends AbstractCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        UserOrder userOrder = new UserOrder.Builder()
+        UserOrder userOrder = UserOrder.builder()
                 .setId(Integer.parseInt(USER_ORDER_ID_ATTRIBUTE))
                 .setUserId(Integer.parseInt(USER_ID_ATTRIBUTE))
                 .setOrderId(Integer.parseInt(ORDER_ID_ATTRIBUTE))

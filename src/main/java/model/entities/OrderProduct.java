@@ -15,45 +15,25 @@ public class OrderProduct implements Identified {
     private int quantity;
     private long productSum;
 
-    public static class Builder {
-        OrderProduct instance=new OrderProduct();
-
-        public Builder setId(int id) {
-            instance.id=id;
-            return this;
-        }
-
-        public Builder setOrderId(int orderId) {
-            instance.orderId=orderId;
-            return this;
-        }
-
-        public Builder setProductId(int productId) {
-            instance.productId=productId;
-            return this;
-        }
-
-        public Builder setQuantity(int quantity) {
-            instance.quantity=quantity;
-            return this;
-        }
-
-        public Builder setProductSum(long productSum) {
-            instance.productSum=productSum;
-            return this;
-        }
-
-        public OrderProduct build() {
-            return instance;
-        }
+    public OrderProduct(int id, int orderId, int productId, int quantity, long productSum) {
+        this.id = id;
+        this.orderId = orderId;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.productSum = productSum;
     }
+
+    public static OrderProductBuilder builder() {
+        return new OrderProductBuilder();
+    }
+
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-        this.id=id;
+        this.id = id;
     }
 
     public int getOrderId() {
@@ -61,7 +41,7 @@ public class OrderProduct implements Identified {
     }
 
     public void setOrderId(int orderId) {
-        this.orderId=orderId;
+        this.orderId = orderId;
     }
 
     public int getProductId() {
@@ -69,7 +49,7 @@ public class OrderProduct implements Identified {
     }
 
     public void setProductId(int productId) {
-        this.productId=productId;
+        this.productId = productId;
     }
 
     public Integer getQuantity() {
@@ -77,7 +57,7 @@ public class OrderProduct implements Identified {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity=quantity;
+        this.quantity = quantity;
     }
 
     public long getProductSum() {
@@ -91,7 +71,7 @@ public class OrderProduct implements Identified {
     }
 
     public void setProductSum(long productSum) {
-        this.productSum=productSum;
+        this.productSum = productSum;
     }
 
     @Override
@@ -99,7 +79,7 @@ public class OrderProduct implements Identified {
         if (this == o) return true;
         if (!(o instanceof OrderProduct)) return false;
 
-        OrderProduct that=(OrderProduct) o;
+        OrderProduct that = (OrderProduct) o;
 
         if (id != that.id) return false;
         if (orderId != that.orderId) return false;
@@ -110,11 +90,11 @@ public class OrderProduct implements Identified {
 
     @Override
     public int hashCode() {
-        int result=id;
-        result=31 * result + orderId;
-        result=31 * result + productId;
-        result=31 * result + quantity;
-        result=31 * result + (int) (productSum ^ (productSum >>> 32));
+        int result = id;
+        result = 31 * result + orderId;
+        result = 31 * result + productId;
+        result = 31 * result + quantity;
+        result = 31 * result + (int) (productSum ^ (productSum >>> 32));
         return result;
     }
 

@@ -28,7 +28,7 @@ public class UpdateProductCommand extends AbstractCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        Product product = new Product.Builder()
+        Product product = Product.builder()
                 .setId(Integer.parseInt(request.getParameter(PRODUCT_ID_ATTRIBUTE)))
                 .setName(request.getParameter(PRODUCT_NAME_ATTRIBUTE))
                 .setDescription(request.getParameter(PRODUCT_DESCRIPTION_ATTRIBUTE))

@@ -3,7 +3,6 @@ package model.services.service;
 import model.dao.OrderProductDao;
 import model.dao.UserDao;
 import model.dao.UserOrderDao;
-import model.dao.daofactory.DaoFactory;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.Product;
@@ -24,12 +23,6 @@ public class UserServiceImpl implements UserService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
 
-    private DaoFactory daoFactory = DaoFactory.getInstance();
-
-    public void setDaoFactory(DaoFactory daoFactory) {
-        this.daoFactory = daoFactory;
-    }
-
     private static class Holder {
         static final UserServiceImpl INSTANCE = new UserServiceImpl();
     }
@@ -49,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> getAll() {
-        return transactionHandler.runWithOutCommit(connection -> {
+        return (List<User>) transactionHandler.runWithReturnStatement(connection -> {
             transactionHandler
                     .createUserDao()
                     .findAll();
@@ -58,27 +51,26 @@ public class UserServiceImpl implements UserService {
 
 
     public List<User> getAllUsersWithOrders() {
-//        try (DaoConnection connection = daoFactory.getConnection()) {
-//            connection.beginTransaction();
-//            UserDao userDao = daoFactory.createUserDao(connection);
-//            return userDao.findAllUsersWithOrders();
-//        }
+
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler
+                    .createUserDao()
+                    .findAllUsersWithOrder();
+        });
     }
 
     public Optional<User> getByEmail(String email) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserDao userDao = daoFactory.createUserDao(connection);
-            return userDao.getUserByEmail(email);
-        }
+
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler.createUserDao().getUserByEmail();
+        });
     }
 
     public Optional<User> getById(int id) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            UserDao userDao = daoFactory.createUserDao(connection);
-            return userDao.findById(id);
-        }
+
+        return transactionHandler.runWithOutCommit(connection -> {
+            transactionHandler.createUserDao().findOne(id);
+        });
     }
 
     public Map<User, Map<Order, Map<OrderProduct, Product>>> getUserMap(List<User> userList) {
