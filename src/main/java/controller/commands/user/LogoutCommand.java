@@ -1,6 +1,5 @@
 package controller.commands.user;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.entities.User;
 import org.apache.log4j.Logger;
@@ -18,7 +17,7 @@ import static model.constants.UrlHolder.INDEX;
  *
  * @author dyvakyurii@gmail.com
  */
-public class LogoutCommand extends AbstractCommand implements Command {
+public class LogoutCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(LogoutCommand.class);
 
@@ -28,10 +27,12 @@ public class LogoutCommand extends AbstractCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        HttpSession session=request.getSession();
-        User user=(User) session.getAttribute(USER_SESSION_ATTRIBUTE);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(USER_SESSION_ATTRIBUTE);
+
         logger.info(String.format(USER_LOGGED_OUT, user.getEmail(), user.getId()));
         request.getSession().invalidate();
+
         return INDEX;
     }
 }

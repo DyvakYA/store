@@ -20,7 +20,7 @@ import static model.constants.UrlHolder.ORDER_PRODUCT_DESTINATION_PAGE;
  *
  * @author dyvakyurii@gmail.com
  */
-public class UpdateOrderProductCommand extends AbstractCommand implements Command {
+public class UpdateOrderProductCommand implements Command {
 
     private OrderProductService orderProductsService = OrderProductServiceImpl.getInstance();
 
@@ -34,9 +34,12 @@ public class UpdateOrderProductCommand extends AbstractCommand implements Comman
                 .setProductId(Integer.parseInt(request.getParameter(PRODUCT_ID_ATTRIBUTE)))
                 .build();
         orderProductsService.update(orderProduct);
+
         request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                 .getLocalizedMessage(request, UPDATE_ORDER_PRODUCTS_SUCCESSFUL_MSG));
+
         request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductsService.getAll());
+
         return ORDER_PRODUCT_DESTINATION_PAGE;
     }
 

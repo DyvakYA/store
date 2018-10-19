@@ -1,6 +1,5 @@
 package controller.commands.user;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.entities.User;
 import model.extras.Localization;
@@ -22,7 +21,7 @@ import static model.constants.UrlHolder.INDEX;
  *
  * @author dyvakyurii@gmail.com
  */
-public class RegisterUserCommand extends AbstractCommand implements Command {
+public class RegisterUserCommand implements Command {
 
     private UserService userService = UserServiceImpl.getInstance();
 

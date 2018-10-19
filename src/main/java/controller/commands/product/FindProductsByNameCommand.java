@@ -2,6 +2,7 @@ package controller.commands.product;
 
 import controller.commands.AbstractCommand;
 import controller.commands.Command;
+import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Product;
 import model.services.ProductService;
 import model.services.service.ProductServiceImpl;
@@ -20,7 +21,7 @@ import static model.constants.UrlHolder.PRODUCT_JSP;
  *
  * @author dyvakyurii@gmail.com
  */
-public class FindProductsByNameCommand extends AbstractCommand implements Command {
+public class FindProductsByNameCommand implements Command {
 
     private ProductService productService = ProductServiceImpl.getInstance();
 
@@ -30,6 +31,14 @@ public class FindProductsByNameCommand extends AbstractCommand implements Comman
 
         List<Product> products = productService.getProductsByName(request.getParameter(PRODUCT_NAME_ATTRIBUTE));
         request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, products);
-        return roleCheckerDestinationPageReturner(PRODUCT_JSP, request);
+
+
+        request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
+
+        return RespondFactory.builder()
+                .request(request)
+                .page("product")
+                .build()
+                .createPageFactory();
     }
 }

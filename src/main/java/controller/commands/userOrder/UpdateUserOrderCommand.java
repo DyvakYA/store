@@ -1,6 +1,5 @@
 package controller.commands.userOrder;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.entities.UserOrder;
 import model.extras.Localization;
@@ -20,7 +19,7 @@ import static model.constants.UrlHolder.USER_ORDER_DESTINATION_PAGE;
  *
  * @author dyvakyurii@gmail.com
  */
-public class UpdateUserOrderCommand extends AbstractCommand implements Command {
+public class UpdateUserOrderCommand implements Command {
 
     private UserOrderService userOrderService = UserOrderServiceImpl.getInstance();
 
@@ -34,9 +33,11 @@ public class UpdateUserOrderCommand extends AbstractCommand implements Command {
                 .setOrderId(Integer.parseInt(ORDER_ID_ATTRIBUTE))
                 .build();
         userOrderService.update(userOrder);
+
         request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                 .getLocalizedMessage(request, UPDATE_USER_ORDERS_SUCCESSFUL_MSG));
         request.setAttribute(USER_ORDERS_LIST_ATTRIBUTE, userOrderService.getAll());
+
         return USER_ORDER_DESTINATION_PAGE;
     }
 

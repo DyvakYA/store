@@ -2,24 +2,32 @@ package controller.commands.user;
 
 import controller.commands.AbstractCommand;
 import controller.commands.Command;
+import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Order;
 import model.entities.OrderProduct;
+import model.entities.Product;
 import model.entities.User;
 import model.extras.Localization;
 import model.services.OrderProductService;
 import model.services.OrderService;
+import model.services.ProductService;
+import model.services.UserOrderService;
 import model.services.service.OrderProductServiceImpl;
 import model.services.service.OrderServiceImpl;
+import model.services.service.ProductServiceImpl;
+import model.services.service.UserOrderServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.*;
-import static model.constants.UrlHolder.*;
+import static model.constants.UrlHolder.INDEX;
 
 /**
  * This class represents user add product to order command.
@@ -30,6 +38,8 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
 
     private OrderService orderService = OrderServiceImpl.getInstance();
     private OrderProductService orderProductService = OrderProductServiceImpl.getInstance();
+    private UserOrderService userOrderService = UserOrderServiceImpl.getInstance();
+    private ProductService productService = ProductServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +58,15 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
             request.setAttribute(RESULT_ATTRIBUTE,
                     Localization.getInstance().getLocalizedMessage
                             (request, USER_NOT_AUTHORIZED));
-            return roleCheckerSetAttributes(PRODUCT_JSP, request);
+
+            request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
+
+            return RespondFactory.builder()
+                    .request(request)
+                    .page("product")
+                    .build()
+                    .createPageFactory();
+
         } else if (user.isBlocked()) {
             //set error message when user = null
             request.setAttribute(RESULT_ATTRIBUTE,
@@ -73,7 +91,17 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
                 OrderIdAttributeNotNull(request, productId, orderId, quantity);
             }
         }
-        return roleCheckerSetAttributes(ORDER_JSP, request);
+
+        List<Order> orderList = userOrderService.getOrdersForUser(user.getId());
+        Map<Order, Map<OrderProduct, Product>> orderMap = orderProductService.getOrdersMap(orderList);
+        request.setAttribute(ORDER_MAP_ATTRIBUTE, orderMap);
+
+        return RespondFactory.builder()
+                .request(request)
+                .page("user")
+                .build()
+                .createPageFactory();
+
     }
 
     private void OrderIdAttributeNotNull(HttpServletRequest request, int productId, int orderId, int quantity) {

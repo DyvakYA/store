@@ -1,7 +1,7 @@
 package controller.commands.user;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
+import controller.commands.pageconstructor.RespondFactory;
 import model.entities.User;
 import model.extras.Localization;
 import model.services.UserService;
@@ -13,14 +13,13 @@ import java.io.IOException;
 
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.UPDATE_USER_SUCCESSFUL_MSG;
-import static model.constants.UrlHolder.USER_JSP;
 
 /**
  * This class represents updating User command.
  *
  * @author dyvakyurii@gmail.com
  */
-public class UpdateUserCommand extends AbstractCommand implements Command {
+public class UpdateUserCommand implements Command {
 
     private UserService userService = UserServiceImpl.getInstance();
 
@@ -39,7 +38,14 @@ public class UpdateUserCommand extends AbstractCommand implements Command {
         userService.update(user);
         request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                 .getLocalizedMessage(request, UPDATE_USER_SUCCESSFUL_MSG));
-        return roleCheckerSetAttributes(USER_JSP, request);
+
+        request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
+
+        return RespondFactory.builder()
+                .request(request)
+                .page("user")
+                .build()
+                .createPageFactory();
     }
 
 }

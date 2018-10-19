@@ -19,7 +19,7 @@ import static model.constants.UrlHolder.ORDER_PRODUCT_DESTINATION_PAGE;
  *
  * @author dyvakyurii@gmail.com
  */
-public class GetAllOrderProductCommand extends AbstractCommand implements Command {
+public class GetAllOrderProductCommand implements Command {
 
     private OrderProductService orderProductsService=OrderProductServiceImpl.getInstance();
 
@@ -29,6 +29,7 @@ public class GetAllOrderProductCommand extends AbstractCommand implements Comman
 
         List<OrderProduct> orderProducts=orderProductsService.getAll();
         request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProducts);
+
         return ORDER_PRODUCT_DESTINATION_PAGE;
     }
 }

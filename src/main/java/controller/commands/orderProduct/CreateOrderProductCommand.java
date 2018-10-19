@@ -1,6 +1,5 @@
 package controller.commands.orderProduct;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.entities.OrderProduct;
 import model.extras.Localization;
@@ -20,7 +19,7 @@ import static model.constants.UrlHolder.ORDER_PRODUCT_DESTINATION_PAGE;
  *
  * @author dyvakyurii@gmail.com
  */
-public class CreateOrderProductCommand extends AbstractCommand implements Command {
+public class CreateOrderProductCommand implements Command {
 
     private OrderProductService orderProductService = OrderProductServiceImpl.getInstance();
 
@@ -33,9 +32,11 @@ public class CreateOrderProductCommand extends AbstractCommand implements Comman
                 .setProductId(Integer.valueOf(request.getParameter(PRODUCT_ID_ATTRIBUTE)))
                 .build();
         orderProductService.create(orderProduct);
+
         request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                 .getLocalizedMessage(request, CREATE_ORDER_PRODUCTS_SUCCESSFUL_MSG));
         request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductService.getAll());
+
         return ORDER_PRODUCT_DESTINATION_PAGE;
     }
 }

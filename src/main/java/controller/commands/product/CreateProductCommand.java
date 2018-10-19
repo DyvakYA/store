@@ -2,6 +2,7 @@ package controller.commands.product;
 
 import controller.commands.AbstractCommand;
 import controller.commands.Command;
+import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Product;
 import model.extras.Localization;
 import model.services.ProductService;
@@ -13,16 +14,15 @@ import java.io.IOException;
 
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.CREATE_PRODUCT_SUCCESSFUL_MSG;
-import static model.constants.UrlHolder.PRODUCT_JSP;
 
 /**
  * This class represents creating Product command.
  *
  * @author dyvakyurii@gmail.com
  */
-public class CreateProductCommand extends AbstractCommand implements Command {
+public class CreateProductCommand implements Command {
 
-    private ProductService productService=ProductServiceImpl.getInstance();
+    private ProductService productService = ProductServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -34,8 +34,17 @@ public class CreateProductCommand extends AbstractCommand implements Command {
                 .setDoublePrice(Double.parseDouble(request.getParameter(PRODUCT_PRICE_ATTRIBUTE)))
                 .build();
         productService.create(product);
+
         request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                 .getLocalizedMessage(request, CREATE_PRODUCT_SUCCESSFUL_MSG));
-        return roleCheckerSetAttributes(PRODUCT_JSP, request);
+
+        request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
+
+        return RespondFactory.builder()
+                .request(request)
+                .page("product")
+                .build()
+                .createPageFactory();
+        //roleCheckerSetAttributes(PRODUCT_JSP, request);
     }
 }

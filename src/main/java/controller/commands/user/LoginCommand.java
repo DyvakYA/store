@@ -1,6 +1,5 @@
 package controller.commands.user;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.entities.User;
 import model.extras.Localization;
@@ -23,7 +22,7 @@ import static model.constants.UrlHolder.*;
  *
  * @author dyvakyurii@gmail.com
  */
-public class LoginCommand extends AbstractCommand implements Command {
+public class LoginCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
 

@@ -1,6 +1,5 @@
 package controller.commands.orderProduct;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.extras.Localization;
 import model.services.OrderProductService;
@@ -19,7 +18,7 @@ import static model.constants.UrlHolder.ORDER_PRODUCT_DESTINATION_PAGE;
  *
  * @author dyvakyurii@gmail.com
  */
-public class DeleteOrderProductCommand extends AbstractCommand implements Command {
+public class DeleteOrderProductCommand implements Command {
 
     private OrderProductService orderProductsService = OrderProductServiceImpl.getInstance();
 
@@ -28,9 +27,11 @@ public class DeleteOrderProductCommand extends AbstractCommand implements Comman
             throws IOException {
 
         orderProductsService.delete(Integer.parseInt(request.getParameter(ORDER_ID_ATTRIBUTE)));
+
         request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                 .getLocalizedMessage(request, DELETE_ORDER_PRODUCTS_SUCCESSFUL_MSG));
         request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductsService.getAll());
+
         return ORDER_PRODUCT_DESTINATION_PAGE;
     }
 

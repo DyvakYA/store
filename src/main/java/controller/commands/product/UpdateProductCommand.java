@@ -35,8 +35,11 @@ public class UpdateProductCommand extends AbstractCommand implements Command {
                 .setDoublePrice(Double.parseDouble(request.getParameter(PRODUCT_PRICE_ATTRIBUTE)))
                 .build();
         productService.update(product);
+
+
         request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
                 .getLocalizedMessage(request, UPDATE_PRODUCT_SUCCESSFUL_MSG));
+
         return roleCheckerDestinationPageReturner(PRODUCT_JSP, request);
     }
 }
