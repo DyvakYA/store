@@ -40,7 +40,7 @@ public final class UrlHolder {
     public static final String INDEX = "/WEB-INF/index.jsp";
     public static final String REDIRECTED = "REDIRECTED";
 
-    public static final String USER_ORDER_DESTINATION_PAGE= "/WEB-INF/user/order.jsp";
+    public static final String USER_ORDER_DESTINATION_PAGE= "user/order.jsp";
     public static final String ADMIN_USERS_DESTINATION_PAGE= "/WEB-INF/admin/users.jsp";
     public static final String ORDER_PRODUCT_DESTINATION_PAGE = "/orderProducts.jsp";
     public static final String ADMIN_PRODUCT_DESTINATION_PAGE = "/WEB-INF/admin/product.jsp";

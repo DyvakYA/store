@@ -36,8 +36,9 @@ public class UpdateUserCommand implements Command {
                 .setBlocked(Boolean.parseBoolean(request.getParameter(USER_BLOCKED_ATTRIBUTE)))
                 .build();
         userService.update(user);
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, UPDATE_USER_SUCCESSFUL_MSG));
+
+        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_USER_SUCCESSFUL_MSG);
+        request.setAttribute(RESULT_ATTRIBUTE, message);
 
         request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
 

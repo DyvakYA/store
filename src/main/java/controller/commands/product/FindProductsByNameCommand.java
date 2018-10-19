@@ -30,9 +30,8 @@ public class FindProductsByNameCommand implements Command {
             throws IOException {
 
         List<Product> products = productService.getProductsByName(request.getParameter(PRODUCT_NAME_ATTRIBUTE));
+
         request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, products);
-
-
         request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
 
         return RespondFactory.builder()

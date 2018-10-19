@@ -1,6 +1,5 @@
 package controller.commands.product;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Product;
@@ -35,9 +34,9 @@ public class CreateProductCommand implements Command {
                 .build();
         productService.create(product);
 
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, CREATE_PRODUCT_SUCCESSFUL_MSG));
+        String message = Localization.getInstance().getLocalizedMessage(request, CREATE_PRODUCT_SUCCESSFUL_MSG);
 
+        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
 
         return RespondFactory.builder()

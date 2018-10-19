@@ -24,8 +24,8 @@ public class UserGetAllUserOrdersCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-
         request.setAttribute(USER_ORDERS_LIST_ATTRIBUTE, userOrderService.getAll());
+
         return USER_ORDER_DESTINATION_PAGE;
     }
 }

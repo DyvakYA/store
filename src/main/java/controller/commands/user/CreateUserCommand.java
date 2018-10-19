@@ -35,10 +35,9 @@ public class CreateUserCommand implements Command {
                 .setBlocked(Boolean.parseBoolean(request.getParameter(USER_BLOCKED_ATTRIBUTE)))
                 .build();
         userService.create(user);
+        String message = Localization.getInstance().getLocalizedMessage(request, CREATE_USER_SUCCESSFUL_MSG);
 
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, CREATE_USER_SUCCESSFUL_MSG));
-
+        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
 
         return RespondFactory.builder()

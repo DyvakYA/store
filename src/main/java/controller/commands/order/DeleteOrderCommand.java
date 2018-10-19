@@ -38,8 +38,8 @@ public class DeleteOrderCommand implements Command {
 
         orderService.delete(Integer.parseInt(request.getParameter(ORDER_ID_ATTRIBUTE)));
 
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, DELETE_ORDER_SUCCESSFUL_MSG));
+        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_ORDER_SUCCESSFUL_MSG);
+        request.setAttribute(RESULT_ATTRIBUTE, message);
 
         List<User> userList = userService.getAllUsersWithOrders();
         Map<User, Map<Order, Map<OrderProduct, Product>>> userMap = userService.getUserMap(userList);

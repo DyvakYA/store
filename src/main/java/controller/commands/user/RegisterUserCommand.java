@@ -36,13 +36,13 @@ public class RegisterUserCommand implements Command {
                     .setPassword(request.getParameter(USER_AUTHENTICATE_ATTRIBUTE))
                     .build();
             userService.create(user);
-            request.setAttribute(RESULT_ATTRIBUTE,
-                    Localization.getInstance().
-                            getLocalizedMessage(request, REGISTER_USER_SUCCESSFUL_MSG) + email);
+
+            String message = Localization.getInstance().getLocalizedMessage(request, REGISTER_USER_SUCCESSFUL_MSG) + email;
+            request.setAttribute(RESULT_ATTRIBUTE, message);
         } else {
-            request.setAttribute(RESULT_ATTRIBUTE,
-                    Localization.getInstance().
-                            getLocalizedMessage(request, REGISTER_USER_ERROR_MSG) + email);
+
+            String message = Localization.getInstance().getLocalizedMessage(request, REGISTER_USER_ERROR_MSG) + email;
+            request.setAttribute(RESULT_ATTRIBUTE, message);
         }
         return INDEX;
     }

@@ -88,7 +88,7 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
                         .getLocalizedMessage(request, CREATE_USER_ORDER_SUCCESSFUL_MSG));
             } else if (session.getAttribute(ORDER_ID_ATTRIBUTE) != null) {
                 orderId = Integer.parseInt(String.valueOf(session.getAttribute(ORDER_ID_ATTRIBUTE)));
-                OrderIdAttributeNotNull(request, productId, orderId, quantity);
+                orderIdAttributeNotNull(request, productId, orderId, quantity);
             }
         }
 
@@ -104,7 +104,7 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
 
     }
 
-    private void OrderIdAttributeNotNull(HttpServletRequest request, int productId, int orderId, int quantity) {
+    private void orderIdAttributeNotNull(HttpServletRequest request, int productId, int orderId, int quantity) {
         //get orderProduct from data base
         Optional<OrderProduct> orderProductFromBase = orderProductService
                 .getOrderProductByOrderIdAndProductId(orderId, productId);
@@ -124,9 +124,10 @@ public class UserAddProductToOrderCommand extends AbstractCommand implements Com
                     .setQuantity(quantity)
                     .build();
             orderProductService.create(orderProduct);
+
             //set message about successful creation userOrder
-            request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                    .getLocalizedMessage(request, CREATE_USER_ORDER_SUCCESSFUL_MSG));
+            String message = Localization.getInstance().getLocalizedMessage(request, CREATE_USER_ORDER_SUCCESSFUL_MSG);
+            request.setAttribute(RESULT_ATTRIBUTE, message);
         }
     }
 }

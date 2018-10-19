@@ -1,6 +1,5 @@
 package controller.commands.orderProduct;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.entities.OrderProduct;
 import model.extras.Localization;
@@ -34,10 +33,9 @@ public class UpdateOrderProductCommand implements Command {
                 .setProductId(Integer.parseInt(request.getParameter(PRODUCT_ID_ATTRIBUTE)))
                 .build();
         orderProductsService.update(orderProduct);
+        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_ORDER_PRODUCTS_SUCCESSFUL_MSG);
 
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, UPDATE_ORDER_PRODUCTS_SUCCESSFUL_MSG));
-
+        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductsService.getAll());
 
         return ORDER_PRODUCT_DESTINATION_PAGE;

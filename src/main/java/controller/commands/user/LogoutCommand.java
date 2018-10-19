@@ -19,7 +19,7 @@ import static model.constants.UrlHolder.INDEX;
  */
 public class LogoutCommand implements Command {
 
-    private static final Logger logger = Logger.getLogger(LogoutCommand.class);
+    private static final Logger log = Logger.getLogger(LogoutCommand.class);
 
     private static final String USER_LOGGED_OUT = "%s id=%s LOGGED OUT.";
 
@@ -30,7 +30,7 @@ public class LogoutCommand implements Command {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER_SESSION_ATTRIBUTE);
 
-        logger.info(String.format(USER_LOGGED_OUT, user.getEmail(), user.getId()));
+        log.info(String.format(USER_LOGGED_OUT, user.getEmail(), user.getId()));
         request.getSession().invalidate();
 
         return INDEX;

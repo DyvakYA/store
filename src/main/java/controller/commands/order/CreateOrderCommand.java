@@ -42,9 +42,8 @@ public class CreateOrderCommand implements Command {
                 .setDate(new Timestamp(System.currentTimeMillis()))
                 .build();
         orderService.create(order);
-
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, CREATE_ORDER_SUCCESSFUL_MSG));
+        String message = Localization.getInstance().getLocalizedMessage(request, CREATE_ORDER_SUCCESSFUL_MSG);
+        request.setAttribute(RESULT_ATTRIBUTE, message);
 
         List<User> userList = userService.getAllUsersWithOrders();
         Map<User, Map<Order, Map<OrderProduct, Product>>> userMap = userService.getUserMap(userList);

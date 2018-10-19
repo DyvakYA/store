@@ -36,9 +36,8 @@ public class UpdateProductCommand extends AbstractCommand implements Command {
                 .build();
         productService.update(product);
 
-
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, UPDATE_PRODUCT_SUCCESSFUL_MSG));
+        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_PRODUCT_SUCCESSFUL_MSG);
+        request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return roleCheckerDestinationPageReturner(PRODUCT_JSP, request);
     }

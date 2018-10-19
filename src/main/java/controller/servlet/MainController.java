@@ -22,9 +22,9 @@ import static model.constants.UrlHolder.REDIRECTED;
  */
 public class MainController extends HttpServlet {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = Logger.getLogger(MainController.class);
+    private static final Logger log = Logger.getLogger(MainController.class);
 
     public MainController() {
         super();
@@ -37,7 +37,7 @@ public class MainController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        commandHolder=new CommandHolder();
+        commandHolder = new CommandHolder();
         super.init();
     }
 
@@ -49,19 +49,25 @@ public class MainController extends HttpServlet {
      * @throws IOException      in case of troubles with redirecting
      * @throws ServletException in case of internal servlet troubles. Do not used directly in application.
      */
-    void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-
-        String method=getMethod(request);
-        String commandKey = getMethod(request) + DELIMITER + getUri(request);
-        if (method.equals(POST)) {
-            commandKey=getMethod(request) + DELIMITER + request.getParameter(COMMAND_ATTRIBUTE);
-        }
-        Command command=commandHolder.findCommand(commandKey);
-        String view=command.execute(request, response);
-        System.out.println(view);
-        if (!isRedirected(view)) {
-            request.getRequestDispatcher(view).forward(request, response);
+    void processRequest(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String method = getMethod(request);
+            String commandKey = getMethod(request) + DELIMITER + getUri(request);
+            if (method.equals(POST)) {
+                commandKey = getMethod(request) + DELIMITER + request.getParameter(COMMAND_ATTRIBUTE);
+            }
+            Command command = commandHolder.findCommand(commandKey);
+            String view = null;
+            view = command.execute(request, response);
+            System.out.println(view);
+            if (!isRedirected(view)) {
+                String path = new StringBuffer("/WEB-INF").append(view).append(".jsp").toString();
+                request.getRequestDispatcher(path).forward(request, response);
+            }
+        } catch (ServletException e) {
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (IOException e) {
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 
@@ -70,8 +76,8 @@ public class MainController extends HttpServlet {
     }
 
     private String getUri(HttpServletRequest request) {
-        String uri=request.getRequestURI();
-        logger.debug(request.getMethod().toUpperCase() + uri);
+        String uri = request.getRequestURI();
+        log.debug(request.getMethod().toUpperCase() + uri);
         return uri;
     }
 
@@ -80,14 +86,12 @@ public class MainController extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
         processRequest(request, response);
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
         processRequest(request, response);
     }
 

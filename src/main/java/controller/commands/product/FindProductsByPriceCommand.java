@@ -1,6 +1,5 @@
 package controller.commands.product;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Product;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static model.constants.AttributesHolder.*;
-import static model.constants.UrlHolder.PRODUCT_JSP;
 
 /**
  * This class represents find Product by price command.
@@ -28,11 +26,12 @@ public class FindProductsByPriceCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        List<Product> products = productService.getProductsByPrice(
-                Double.parseDouble(request.getParameter(PRICE_FIRST_ATTRIBUTE)),
-                Double.parseDouble(request.getParameter(PRICE_SECOND_ATTRIBUTE)));
-        request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, products);
+        Double from = Double.parseDouble(request.getParameter(PRICE_FIRST_ATTRIBUTE));
+        Double to = Double.parseDouble(request.getParameter(PRICE_SECOND_ATTRIBUTE));
 
+        List<Product> products = productService.getProductsByPrice(from, to);
+
+        request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, products);
         request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
 
         return RespondFactory.builder()

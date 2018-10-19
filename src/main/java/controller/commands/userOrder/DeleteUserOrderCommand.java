@@ -28,8 +28,9 @@ public class DeleteUserOrderCommand implements Command {
 
         userOrderService.delete(Integer.valueOf(request.getParameter(USER_ID_ATTRIBUTE)));
 
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, DELETE_USER_ORDERS_SUCCESSFUL_MSG));
+        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_USER_ORDERS_SUCCESSFUL_MSG);
+
+        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(USER_ORDERS_LIST_ATTRIBUTE, userOrderService.getAll());
 
         return USER_ORDER_DESTINATION_PAGE;

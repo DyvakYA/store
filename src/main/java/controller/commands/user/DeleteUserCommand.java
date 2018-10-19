@@ -28,9 +28,9 @@ public class DeleteUserCommand implements Command {
 
         userService.delete(Integer.valueOf(request.getParameter(USER_ID_ATTRIBUTE)));
 
-        request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
-                .getLocalizedMessage(request, DELETE_USER_SUCCESSFUL_MSG));
+        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_USER_SUCCESSFUL_MSG);
 
+        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
 
         return RespondFactory.builder()

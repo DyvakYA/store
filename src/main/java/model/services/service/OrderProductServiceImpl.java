@@ -59,7 +59,6 @@ public class OrderProductServiceImpl implements OrderProductService {
                     .createOrderProductDao()
                     .getProductPrice(orderProduct);
 
-
             orderProduct.setProductSum((long) orderProduct.getQuantity() *
                     productPrice);
 
