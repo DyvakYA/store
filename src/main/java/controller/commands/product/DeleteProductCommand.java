@@ -27,10 +27,11 @@ public class DeleteProductCommand implements Command {
             throws IOException {
 
         productService.delete(Integer.parseInt(request.getParameter(PRODUCT_ID_ATTRIBUTE)));
-        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_PRODUCT_SUCCESSFUL_MSG);
 
-        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
+
+        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_PRODUCT_SUCCESSFUL_MSG);
+        request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return RespondFactory.builder()
                 .request(request)

@@ -1,7 +1,6 @@
 package controller.commands.product;
 
 import controller.commands.Command;
-import controller.commands.AbstractCommand;
 import controller.commands.pageconstructor.RespondFactory;
 import model.services.ProductService;
 import model.services.service.ProductServiceImpl;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static model.constants.AttributesHolder.PRODUCTS_LIST_ATTRIBUTE;
-import static model.constants.UrlHolder.PRODUCT_JSP;
 
 /**
  * This class represents get all Products from base.

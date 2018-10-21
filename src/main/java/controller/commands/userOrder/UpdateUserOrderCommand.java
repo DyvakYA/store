@@ -34,10 +34,10 @@ public class UpdateUserOrderCommand implements Command {
                 .build();
         userOrderService.update(userOrder);
 
-        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_USER_ORDERS_SUCCESSFUL_MSG);
-
-        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(USER_ORDERS_LIST_ATTRIBUTE, userOrderService.getAll());
+
+        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_USER_ORDERS_SUCCESSFUL_MSG);
+        request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return USER_ORDER_DESTINATION_PAGE;
     }

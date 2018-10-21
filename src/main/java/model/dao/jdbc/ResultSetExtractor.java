@@ -13,7 +13,7 @@ import static model.constants.AttributesHolder.*;
 class ResultSetExtractor {
 
     OrderProduct getOrderProductFromResultSet(ResultSet resultSet) throws SQLException {
-        return new OrderProduct.Builder()
+        return OrderProduct.builder()
                 .setId(resultSet.getInt(ORDER_PRODUCT_ID_ATTRIBUTE))
                 .setOrderId(resultSet.getInt(ORDER_ID_ATTRIBUTE))
                 .setProductId(resultSet.getInt(PRODUCT_ID_ATTRIBUTE))
@@ -52,7 +52,7 @@ class ResultSetExtractor {
     }
 
     UserOrder getUserOrderFromResultSet(ResultSet resultSet) throws SQLException {
-        return new UserOrder.Builder()
+        return UserOrder.builder()
                 .setUserId(resultSet.getInt(USER_ID_ATTRIBUTE))
                 .setOrderId(resultSet.getInt(ORDER_ID_ATTRIBUTE))
                 .build();

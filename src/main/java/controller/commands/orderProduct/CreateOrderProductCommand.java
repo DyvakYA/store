@@ -33,9 +33,10 @@ public class CreateOrderProductCommand implements Command {
                 .build();
         orderProductService.create(orderProduct);
 
+        request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductService.getAll());
+
         String message = Localization.getInstance().getLocalizedMessage(request, CREATE_ORDER_PRODUCTS_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
-        request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductService.getAll());
 
         return ORDER_PRODUCT_DESTINATION_PAGE;
     }

@@ -1,5 +1,7 @@
 package model.services.service;
 
+import model.dao.daofactory.DaoManager;
+import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Order;
 import model.entities.UserOrder;
 import model.services.UserOrderService;
@@ -15,6 +17,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
 
+    private DaoManager daoManager = new JdbcDaoManager();
+
     private static class Holder {
         static final UserOrderServiceImpl INSTANCE = new UserOrderServiceImpl();
     }
@@ -26,35 +30,35 @@ public class UserOrderServiceImpl implements UserOrderService {
     public List<UserOrder> getAll() {
 
         return (List<UserOrder>) transactionHandler.runWithReturnStatement(connection -> {
-            transactionHandler.createUserOrderDao().findAll();
+            daoManager.createUserOrderDao().findAll();
         });
     }
 
     public List<Order> getOrdersForUser(int user) {
 
         return transactionHandler.runWithReturnStatement(connection -> {
-            transactionHandler.createUserOrderDao().findAllordersForUser(user);
+            daoManager.createUserOrderDao().findAllOrdersForUser(user);
         });
     }
 
     public void create(UserOrder userOrder) {
 
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler.createUserOrderDao().create(userOrder);
+            daoManager.createUserOrderDao().create(userOrder);
         });
     }
 
     public void update(UserOrder userOrder) {
 
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler.createUserOrderDao().update(userOrder);
+            daoManager.createUserOrderDao().update(userOrder);
         });
     }
 
     public void delete(int id) {
 
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler.createUserOrderDao().delete(id);
+            daoManager.createUserOrderDao().delete(id);
         });
     }
 }

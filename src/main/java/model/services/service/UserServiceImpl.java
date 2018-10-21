@@ -3,6 +3,8 @@ package model.services.service;
 import model.dao.OrderProductDao;
 import model.dao.UserDao;
 import model.dao.UserOrderDao;
+import model.dao.daofactory.DaoManager;
+import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.Product;
@@ -23,6 +25,8 @@ public class UserServiceImpl implements UserService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
 
+    private DaoManager daoManager = new JdbcDaoManager();
+
     private static class Holder {
         static final UserServiceImpl INSTANCE = new UserServiceImpl();
     }
@@ -33,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     public Optional<User> login(String email, String password) {
         return transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createUserDao()
                     .getUserByEmail(email)
                     .filter(user -> (user.calcPasswordHash(password)).equals(user.getPasswordHash()))
@@ -43,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getAll() {
         return (List<User>) transactionHandler.runWithReturnStatement(connection -> {
-            transactionHandler
+            daoManager
                     .createUserDao()
                     .findAll();
         });
@@ -53,7 +57,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsersWithOrders() {
 
         return transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createUserDao()
                     .findAllUsersWithOrder();
         });
@@ -62,14 +66,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getByEmail(String email) {
 
         return transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler.createUserDao().getUserByEmail();
+            daoManager.createUserDao().getUserByEmail();
         });
     }
 
     public Optional<User> getById(int id) {
 
         return transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler.createUserDao().findOne(id);
+            daoManager.createUserDao().findOne(id);
         });
     }
 
@@ -102,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
     public void create(User user) {
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler
+            daoManager
                     .createUserDao()
                     .create(user);
         });
@@ -112,7 +116,7 @@ public class UserServiceImpl implements UserService {
     public void update(User user) {
 
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler.createUserDao()
+            daoManager.createUserDao()
                     .update(user);
         });
     }
@@ -120,7 +124,7 @@ public class UserServiceImpl implements UserService {
     public void delete(int id) {
 
         transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createUserDao()
                     .delete(id);
         });

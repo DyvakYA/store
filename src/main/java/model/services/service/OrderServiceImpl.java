@@ -3,6 +3,8 @@ package model.services.service;
 import model.dao.OrderDao;
 import model.dao.connection.DaoConnection;
 import model.dao.daofactory.DaoFactory;
+import model.dao.daofactory.DaoManager;
+import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Order;
 import model.services.OrderService;
 import model.services.transactions.TransactionHandler;
@@ -19,6 +21,8 @@ import static model.constants.AttributesHolder.STARTED;
 public class OrderServiceImpl implements OrderService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
+
+    private DaoManager daoManager = new JdbcDaoManager();
 
     private DaoFactory daoFactory = DaoFactory.getInstance();
 
@@ -65,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
 
     public void create(Order order) {
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler
+            daoManager
                     .createOrderDao()
                     .create(order);
         });
@@ -73,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
 
     public void update(Order order) {
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler
+            daoManager
                     .createOrderDao()
                     .update(order);
         });
@@ -81,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
 
     public void delete(int id) {
         transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createOrderDao()
                     .delete(id);
         });

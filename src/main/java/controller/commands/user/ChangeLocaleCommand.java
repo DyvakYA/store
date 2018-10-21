@@ -1,7 +1,6 @@
 package controller.commands.user;
 
 import controller.commands.Command;
-import controller.commands.AbstractCommand;
 import model.entities.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import static model.constants.UrlHolder.*;
  *
  * @author dyvakyurii@gmail.com
  */
-public class ChangeLocaleCommand extends AbstractCommand implements Command {
+public class ChangeLocaleCommand implements Command {
 
     private static final String RU_COUNTRY="RU";
     private static final String RU_LANGUAGE="ru";

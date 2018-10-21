@@ -28,10 +28,10 @@ public class DeleteUserCommand implements Command {
 
         userService.delete(Integer.valueOf(request.getParameter(USER_ID_ATTRIBUTE)));
 
-        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_USER_SUCCESSFUL_MSG);
-
-        request.setAttribute(RESULT_ATTRIBUTE, message);
         request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
+
+        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_USER_SUCCESSFUL_MSG);
+        request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return RespondFactory.builder()
                 .request(request)

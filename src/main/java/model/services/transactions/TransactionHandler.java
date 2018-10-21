@@ -15,15 +15,5 @@ public interface TransactionHandler {
 
     Object runWithReturnStatement(Transaction transaction);
 
-    GenericDao<Product> createProductDao();
 
-    GenericDao<User> createUserDao();
-
-    GenericDao<Order> createOrderDao();
-
-    GenericDao<UserOrder> createUserOrderDao();
-
-    GenericDao<OrderProduct> createOrderProductDao();
-
-    void setDaoFactory(DaoFactory daoFactory);
 }

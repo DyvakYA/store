@@ -32,6 +32,7 @@ public class AdminGetAllOrdersCommand implements Command {
 
         List<User> userList = userService.getAllUsersWithOrders();
         Map<User, Map<Order, Map<OrderProduct, Product>>> userMap = userService.getUserMap(userList);
+
         request.setAttribute(USER_MAP_ATTRIBUTE, userMap);
 
         return RespondFactory.builder()

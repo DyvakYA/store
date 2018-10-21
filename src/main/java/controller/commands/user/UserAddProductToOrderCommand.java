@@ -1,6 +1,5 @@
 package controller.commands.user;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Order;
@@ -34,7 +33,7 @@ import static model.constants.UrlHolder.INDEX;
  *
  * @author dyvakyurii@gmail.com
  */
-public class UserAddProductToOrderCommand extends AbstractCommand implements Command {
+public class UserAddProductToOrderCommand implements Command {
 
     private OrderService orderService = OrderServiceImpl.getInstance();
     private OrderProductService orderProductService = OrderProductServiceImpl.getInstance();

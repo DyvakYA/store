@@ -37,10 +37,10 @@ public class UpdateUserCommand implements Command {
                 .build();
         userService.update(user);
 
+        request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
+
         String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_USER_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
-
-        request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
 
         return RespondFactory.builder()
                 .request(request)

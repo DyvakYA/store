@@ -5,7 +5,9 @@ import model.dao.exception.DAOException;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by User on 5/27/2018.
@@ -138,29 +140,15 @@ public abstract class AbstractDao<T> {
     }
 
     private String toStringFields(Field[] fields) {
-        StringBuilder string = new StringBuilder("(");
-        for (int i = 1; i < fields.length; i++) {
-            if (i < fields.length - 1) {
-                string.append(fields[i].getName() + ",");
-            } else {
-                string.append(fields[i].getName());
-            }
-        }
-        string.append(")");
-        return string.toString();
+        return new StringBuilder("(").append(Arrays.stream(fields)
+                .map(s -> s.getName())
+                .collect(Collectors.joining(","))).append(")").toString();
     }
 
 
     private String toStringCountParameters(Field[] fields) {
-        StringBuilder string = new StringBuilder("(");
-        for (int i = 1; i < fields.length; i++) {
-            if (i < fields.length - 1) {
-                string.append("?" + ",");
-            } else if (i == fields.length - 1) {
-                string.append("?");
-            }
-        }
-        string.append(")");
-        return string.toString();
+        return new StringBuilder("(").append(Arrays.stream(fields)
+                .map(s -> new String("?"))
+                .collect(Collectors.joining(","))).append(")").toString();
     }
 }

@@ -1,6 +1,5 @@
 package controller.commands.product;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Product;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import static model.constants.AttributesHolder.PRODUCTS_LIST_ATTRIBUTE;
 import static model.constants.AttributesHolder.PRODUCT_NAME_ATTRIBUTE;
-import static model.constants.UrlHolder.PRODUCT_JSP;
 
 /**
  * This class represents find Product by name command.

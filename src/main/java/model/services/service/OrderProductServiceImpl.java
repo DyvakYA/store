@@ -3,6 +3,8 @@ package model.services.service;
 import model.dao.OrderDao;
 import model.dao.OrderProductDao;
 import model.dao.connection.DaoConnection;
+import model.dao.daofactory.DaoManager;
+import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.Product;
@@ -27,13 +29,15 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
 
+    private DaoManager daoManager = new JdbcDaoManager();
+
     public static OrderProductServiceImpl getInstance() {
         return Holder.INSTANCE;
     }
 
     public List<OrderProduct> getAll() {
         return (List<OrderProduct>) transactionHandler.runWithReturnStatement(connection -> {
-            transactionHandler
+            daoManager
                     .createOrderProductDao()
                     .findAll();
         });
@@ -47,7 +51,7 @@ public class OrderProductServiceImpl implements OrderProductService {
                     .setUserId(userId)
                     .setOrderId(orderId)
                     .build();
-            transactionHandler.createUserOrderDao().create(userOrder);
+            daoManager.createUserOrderDao().create(userOrder);
 
             OrderProduct orderProduct = OrderProduct.builder()
                     .setOrderId(orderId)
@@ -55,14 +59,14 @@ public class OrderProductServiceImpl implements OrderProductService {
                     .setQuantity(quantity)
                     .build();
 
-            long productPrice = transactionHandler
+            long productPrice = daoManager
                     .createOrderProductDao()
                     .getProductPrice(orderProduct);
 
             orderProduct.setProductSum((long) orderProduct.getQuantity() *
                     productPrice);
 
-            transactionHandler
+            daoManager
                     .createOrderProductDao()
                     .create(orderProduct);
 
@@ -122,7 +126,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     public void delete(int id) {
 
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler.createOrderProductDao().delete(id);
+            daoManager.createOrderProductDao().delete(id);
         });
     }
 

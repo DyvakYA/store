@@ -1,6 +1,5 @@
 package controller.commands.orderProduct;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
 import model.entities.OrderProduct;
 import model.services.OrderProductService;

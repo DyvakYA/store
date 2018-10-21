@@ -1,6 +1,8 @@
 package model.services.service;
 
 import model.dao.daofactory.DaoFactory;
+import model.dao.daofactory.DaoManager;
+import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Product;
 import model.services.ProductService;
 import model.services.transactions.TransactionHandler;
@@ -15,6 +17,8 @@ public class ProductServiceImpl implements ProductService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
 
+    private DaoManager daoManager = new JdbcDaoManager();
+
     private static class Holder {
         static final ProductServiceImpl INSTANCE = new ProductServiceImpl();
     }
@@ -26,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAll() {
 
         return transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createProductDao()
                     .findAll();
         });
@@ -34,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
 
     public void create(Product product) {
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler
+            daoManager
                     .createProductDao()
                     .create(product);
         });
@@ -42,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
 
     public void update(Product product) {
         transactionHandler.runInTransaction(connection -> {
-            transactionHandler
+            daoManager
                     .createProductDao()
                     .update(product);
         });
@@ -50,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
 
     public void delete(int id) {
         transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createProductDao()
                     .delete(id);
         });
@@ -62,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
         long second = (long) doubleSecond * 100;
 
         return transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createProductDao()
                     .findProductByPrice(first, second);
         });
@@ -71,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsByName(String name) {
 
         return transactionHandler.runWithOutCommit(connection -> {
-            transactionHandler
+            daoManager
                     .createProductDao()
                     .findProductsByName(name);
         });

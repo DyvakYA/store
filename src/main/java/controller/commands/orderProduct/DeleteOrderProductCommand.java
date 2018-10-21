@@ -27,9 +27,10 @@ public class DeleteOrderProductCommand implements Command {
             throws IOException {
 
         orderProductsService.delete(Integer.parseInt(request.getParameter(ORDER_ID_ATTRIBUTE)));
+        request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductsService.getAll());
+
         String message = Localization.getInstance().getLocalizedMessage(request, DELETE_ORDER_PRODUCTS_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
-        request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductsService.getAll());
 
         return ORDER_PRODUCT_DESTINATION_PAGE;
     }

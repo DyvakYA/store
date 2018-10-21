@@ -15,8 +15,6 @@ import java.util.Properties;
  */
 public abstract class DaoFactory {
 
-    public abstract DaoConnection getDaoConnection();
-
     public abstract GenericDao<Product> createProductDao(Connection connection);
 
     public abstract GenericDao<User> createUserDao(Connection connection);

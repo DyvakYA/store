@@ -1,7 +1,7 @@
 package controller.commands.product;
 
-import controller.commands.AbstractCommand;
 import controller.commands.Command;
+import controller.commands.pageconstructor.RespondFactory;
 import model.entities.Product;
 import model.extras.Localization;
 import model.services.ProductService;
@@ -13,14 +13,13 @@ import java.io.IOException;
 
 import static model.constants.AttributesHolder.*;
 import static model.constants.MsgHolder.UPDATE_PRODUCT_SUCCESSFUL_MSG;
-import static model.constants.UrlHolder.PRODUCT_JSP;
 
 /**
  * This class represents updating Product command.
  *
  * @author dyvakyurii@gmail.com
  */
-public class UpdateProductCommand extends AbstractCommand implements Command {
+public class UpdateProductCommand implements Command {
 
     private ProductService productService = ProductServiceImpl.getInstance();
 
@@ -39,6 +38,10 @@ public class UpdateProductCommand extends AbstractCommand implements Command {
         String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_PRODUCT_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
-        return roleCheckerDestinationPageReturner(PRODUCT_JSP, request);
+        return RespondFactory.builder()
+                .request(request)
+                .page("products")
+                .build()
+                .createPageFactory();
     }
 }
