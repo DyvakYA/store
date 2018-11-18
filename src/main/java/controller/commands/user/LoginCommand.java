@@ -43,12 +43,11 @@ public class LoginCommand implements Command {
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
                 logger.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
-                result = Localization.getInstance()
-                        .getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
+                result = Localization.getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
                 request.getSession().setAttribute(USER_SESSION_ATTRIBUTE, user);
                 destinationPage = getDestinationPageByUserRole(user, request);
             } else {
-                result = Localization.getInstance().getLocalizedMessage(request, LOGIN_USER_ERROR_MSG);
+                result = Localization.getLocalizedMessage(request, LOGIN_USER_ERROR_MSG);
             }
             request.setAttribute(RESULT_ATTRIBUTE, result);
         }

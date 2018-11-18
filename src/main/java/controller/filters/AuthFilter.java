@@ -47,14 +47,14 @@ public class AuthFilter implements Filter {
         if (user == null) {
             logger.info(USER_NOT_AUTHORIZED);
             request.setAttribute(RESULT_ATTRIBUTE,
-                    Localization.getInstance().getLocalizedMessage
+                    Localization.getLocalizedMessage
                             (request, USER_NOT_AUTHORIZED));
             request.getRequestDispatcher(INDEX).forward(request, response);
             return false;
         }else if(isAdmin(user, uri) || (isUser(user, uri) || (user.isBlocked()))) {
             logger.info(ACCESS_DENIED);
             request.setAttribute(RESULT_ATTRIBUTE,
-                    Localization.getInstance().getLocalizedMessage
+                    Localization.getLocalizedMessage
                             (request, ACCESS_DENIED));
             request.getRequestDispatcher(INDEX).forward(request, response);
             return false;

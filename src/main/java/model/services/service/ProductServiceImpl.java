@@ -1,6 +1,5 @@
 package model.services.service;
 
-import model.dao.daofactory.DaoFactory;
 import model.dao.daofactory.DaoManager;
 import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Product;
@@ -16,8 +15,11 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
+    private DaoManager daoManager = JdbcDaoManager.getInstance();
 
-    private DaoManager daoManager = new JdbcDaoManager();
+    private ProductServiceImpl(){
+
+    }
 
     private static class Holder {
         static final ProductServiceImpl INSTANCE = new ProductServiceImpl();
@@ -29,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getAll() {
 
-        return transactionHandler.runWithOutCommit(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager
                     .createProductDao()
                     .findAll();
@@ -65,16 +67,16 @@ public class ProductServiceImpl implements ProductService {
         long first = (long) doubleFirst * 100;
         long second = (long) doubleSecond * 100;
 
-        return transactionHandler.runWithOutCommit(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager
                     .createProductDao()
-                    .findProductByPrice(first, second);
+                    .findProductsByPrice(first, second);
         });
     }
 
     public List<Product> getProductsByName(String name) {
 
-        return transactionHandler.runWithOutCommit(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager
                     .createProductDao()
                     .findProductsByName(name);

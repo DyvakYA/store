@@ -1,19 +1,18 @@
 package model.dao.daofactory;
 
-import model.dao.GenericDao;
-import model.entities.*;
+import model.dao.*;
 
 public interface DaoManager {
 
-    GenericDao<Product> createProductDao();
+    ProductDao createProductDao();
 
-    GenericDao<User> createUserDao();
+    UserDao createUserDao();
 
-    GenericDao<Order> createOrderDao();
+    OrderDao createOrderDao();
 
-    GenericDao<UserOrder> createUserOrderDao();
+    UserOrderDao createUserOrderDao();
 
-    GenericDao<OrderProduct> createOrderProductDao();
+    OrderProductDao createOrderProductDao();
 
     void setDaoFactory(DaoFactory daoFactory);
 }

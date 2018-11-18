@@ -1,14 +1,12 @@
 package model.services.transactions;
 
-import model.dao.GenericDao;
 import model.dao.connection.DaoConnection;
 import model.dao.connection.DaoConnectionFactory;
 import model.dao.connection.JdbcDaoConnectionFactory;
-import model.dao.daofactory.DaoFactory;
-import model.entities.*;
 import model.services.transactions.exceptions.TransactionException;
 
-import java.sql.Connection;
+import java.util.List;
+import java.util.Optional;
 
 public class TransactionHandlerImpl implements TransactionHandler {
 
@@ -48,10 +46,14 @@ public class TransactionHandlerImpl implements TransactionHandler {
     }
 
     @Override
-    public Object runWithReturnStatement(Transaction transaction) {
+    public Optional runWithReturnStatement(Transaction transaction) {
         return null;
     }
 
+    @Override
+    public List runWithListReturning(Transaction transaction) {
+        return null;
+    }
 
 
 }

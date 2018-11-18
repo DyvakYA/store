@@ -18,7 +18,7 @@ public class Order implements Identified {
     private Date date;
     private long totalPrice;
 
-    public Order(int id, String status, Date date, long totalPrice) {
+    private Order(int id, String status, Date date, long totalPrice) {
         this.id = id;
         this.status = status;
         this.date = date;
@@ -27,6 +27,38 @@ public class Order implements Identified {
 
     public static OrderBuilder builder() {
         return new OrderBuilder();
+    }
+
+    public static class OrderBuilder {
+
+        private int id;
+        private String status;
+        private Date date;
+        private long totalPrice;
+
+        public OrderBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public OrderBuilder setOrderStatus(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public OrderBuilder setDate(Date date) {
+            this.date = date;
+            return this;
+        }
+
+        public OrderBuilder setTotalPrice(long totalPrice) {
+            this.totalPrice = totalPrice;
+            return this;
+        }
+
+        public Order build() {
+            return new Order(id, status, date, totalPrice);
+        }
     }
 
     public int getId() {

@@ -11,32 +11,24 @@ public class Localization {
 
     public static final Localization instance = new Localization();
 
-    private static final String MSG_PROPERTIES_BASE_PATH= "messages";
-    private static final String LABEL_PROPERTIES_BASE_PATH= "labels";
-    private static final String ERROR_MSG_PROPERTIES_BASE_PATH= "/error_messages";
+    private static final String MSG_PROPERTIES_BASE_PATH = "messages";
+    private static final String LABEL_PROPERTIES_BASE_PATH = "labels";
+    private static final String ERROR_MSG_PROPERTIES_BASE_PATH = "/error_messages";
 
-    private Localization() {
-
-    }
-
-    public static Localization getInstance() {
-        return instance;
-    }
-
-    public String getLocalizedMessage(HttpServletRequest request, String resourceName) {
+    public static String getLocalizedMessage(HttpServletRequest request, String resourceName) {
         return getString(request, resourceName, MSG_PROPERTIES_BASE_PATH);
     }
 
-    public String getLocalizedErrorMsg(String resourceName) {
+    public static String getLocalizedErrorMsg(String resourceName) {
         return ResourceBundle.getBundle(ERROR_MSG_PROPERTIES_BASE_PATH).getString(resourceName);
     }
 
-    public String getLocalizedLabel(HttpServletRequest request, String resourceName) {
+    public static String getLocalizedLabel(HttpServletRequest request, String resourceName) {
         return getString(request, resourceName, LABEL_PROPERTIES_BASE_PATH);
     }
 
 
-    public String getString(HttpServletRequest request, String resourceName, String propertiesPath) {
+    public static String getString(HttpServletRequest request, String resourceName, String propertiesPath) {
 
         HttpSession session = request.getSession(false);
 

@@ -16,8 +16,10 @@ import java.util.List;
 public class UserOrderServiceImpl implements UserOrderService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
+    private DaoManager daoManager = JdbcDaoManager.getInstance();
 
-    private DaoManager daoManager = new JdbcDaoManager();
+    private UserOrderServiceImpl(){
+    }
 
     private static class Holder {
         static final UserOrderServiceImpl INSTANCE = new UserOrderServiceImpl();
@@ -29,14 +31,14 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     public List<UserOrder> getAll() {
 
-        return (List<UserOrder>) transactionHandler.runWithReturnStatement(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager.createUserOrderDao().findAll();
         });
     }
 
     public List<Order> getOrdersForUser(int user) {
 
-        return transactionHandler.runWithReturnStatement(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager.createUserOrderDao().findAllOrdersForUser(user);
         });
     }

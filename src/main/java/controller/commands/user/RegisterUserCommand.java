@@ -37,11 +37,11 @@ public class RegisterUserCommand implements Command {
                     .build();
             userService.create(user);
 
-            String message = Localization.getInstance().getLocalizedMessage(request, REGISTER_USER_SUCCESSFUL_MSG) + email;
+            String message = Localization.getLocalizedMessage(request, REGISTER_USER_SUCCESSFUL_MSG) + email;
             request.setAttribute(RESULT_ATTRIBUTE, message);
         } else {
 
-            String message = Localization.getInstance().getLocalizedMessage(request, REGISTER_USER_ERROR_MSG) + email;
+            String message = Localization.getLocalizedMessage(request, REGISTER_USER_ERROR_MSG) + email;
             request.setAttribute(RESULT_ATTRIBUTE, message);
         }
         return INDEX;

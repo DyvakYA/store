@@ -1,8 +1,5 @@
 package model.services.service;
 
-import model.dao.OrderDao;
-import model.dao.connection.DaoConnection;
-import model.dao.daofactory.DaoFactory;
 import model.dao.daofactory.DaoManager;
 import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Order;
@@ -21,10 +18,12 @@ import static model.constants.AttributesHolder.STARTED;
 public class OrderServiceImpl implements OrderService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
+    private DaoManager daoManager = JdbcDaoManager.getInstance();
 
-    private DaoManager daoManager = new JdbcDaoManager();
 
-    private DaoFactory daoFactory = DaoFactory.getInstance();
+    private OrderServiceImpl() {
+
+    }
 
     private static class Holder {
         static final OrderServiceImpl INSTANCE = new OrderServiceImpl();
@@ -35,36 +34,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public List<Order> getAll() {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderDao orderDao = daoFactory.createOrderDao(connection);
-            return orderDao.findAll();
-        }
+        return transactionHandler.runWithListReturning(connection -> {
+            daoManager.createOrderDao().findAll();
+        });
     }
 
     public Order createDefaultOrder() {
-        Order order;
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderDao orderDao = daoFactory.createOrderDao(connection);
-            order = Order.builder()
-                    .setOrderStatus(STARTED)
-                    .setDate(new Date())
-                    .build();
-            orderDao.create(order);
-            connection.commitTransaction();
-        }
+
+        Order order = Order.builder()
+                .setOrderStatus(STARTED)
+                .setDate(new Date())
+                .build();
+        transactionHandler.runWithReturnStatement(connection -> {
+            daoManager.createOrderDao().create(order);
+        });
         return order;
     }
 
     @Override
     public void updateOrderStatus(Order order) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderDao orderDao = daoFactory.createOrderDao(connection);
-            orderDao.updateOrderStatus(order, order.getId());
-            connection.commitTransaction();
-        }
+
+        transactionHandler.runInTransaction(connection -> {
+            daoManager.createOrderDao().update(order);
+        });
     }
 
     public void create(Order order) {

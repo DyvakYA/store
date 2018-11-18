@@ -35,7 +35,7 @@ public class CreateOrderProductCommand implements Command {
 
         request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductService.getAll());
 
-        String message = Localization.getInstance().getLocalizedMessage(request, CREATE_ORDER_PRODUCTS_SUCCESSFUL_MSG);
+        String message = Localization.getLocalizedMessage(request, CREATE_ORDER_PRODUCTS_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return ORDER_PRODUCT_DESTINATION_PAGE;

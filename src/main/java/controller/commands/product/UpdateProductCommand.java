@@ -35,7 +35,7 @@ public class UpdateProductCommand implements Command {
                 .build();
         productService.update(product);
 
-        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_PRODUCT_SUCCESSFUL_MSG);
+        String message = Localization.getLocalizedMessage(request, UPDATE_PRODUCT_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return RespondFactory.builder()

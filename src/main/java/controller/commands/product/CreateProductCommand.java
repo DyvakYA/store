@@ -36,7 +36,7 @@ public class CreateProductCommand implements Command {
 
         request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
 
-        String message = Localization.getInstance().getLocalizedMessage(request, CREATE_PRODUCT_SUCCESSFUL_MSG);
+        String message = Localization.getLocalizedMessage(request, CREATE_PRODUCT_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return RespondFactory.builder()

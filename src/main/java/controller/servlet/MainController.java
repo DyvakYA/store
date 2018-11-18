@@ -57,17 +57,20 @@ public class MainController extends HttpServlet {
                 commandKey = getMethod(request) + DELIMITER + request.getParameter(COMMAND_ATTRIBUTE);
             }
             Command command = commandHolder.findCommand(commandKey);
-            String view = null;
-            view = command.execute(request, response);
+            String view = command.execute(request, response);
             System.out.println(view);
             if (!isRedirected(view)) {
                 String path = new StringBuffer("/WEB-INF").append(view).append(".jsp").toString();
                 request.getRequestDispatcher(path).forward(request, response);
             }
-        } catch (ServletException e) {
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
-        } catch (IOException e) {
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (ServletException | IOException e) {
+            try {
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+            } catch (ServletException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 

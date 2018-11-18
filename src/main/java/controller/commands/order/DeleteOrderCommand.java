@@ -42,7 +42,7 @@ public class DeleteOrderCommand implements Command {
         Map<User, Map<Order, Map<OrderProduct, Product>>> userMap = userService.getUserMap(userList);
         request.setAttribute(USER_MAP_ATTRIBUTE, userMap);
 
-        String message = Localization.getInstance().getLocalizedMessage(request, DELETE_ORDER_SUCCESSFUL_MSG);
+        String message = Localization.getLocalizedMessage(request, DELETE_ORDER_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return RespondFactory.builder()

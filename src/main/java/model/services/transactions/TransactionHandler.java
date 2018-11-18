@@ -1,19 +1,20 @@
 package model.services.transactions;
 
-import model.dao.GenericDao;
-import model.dao.daofactory.DaoFactory;
-import model.entities.*;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by User on 5/27/2018.
  */
-public interface TransactionHandler {
+public interface TransactionHandler<T> {
 
     void runInTransaction(Transaction transaction);
 
     void runWithOutCommit(Transaction transaction);
 
-    Object runWithReturnStatement(Transaction transaction);
+    Optional<T> runWithReturnStatement(Transaction transaction);
+
+    List<T> runWithListReturning(Transaction transaction);
 
 
 }

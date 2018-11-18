@@ -36,7 +36,7 @@ public class UpdateUserOrderCommand implements Command {
 
         request.setAttribute(USER_ORDERS_LIST_ATTRIBUTE, userOrderService.getAll());
 
-        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_USER_ORDERS_SUCCESSFUL_MSG);
+        String message = Localization.getLocalizedMessage(request, UPDATE_USER_ORDERS_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return USER_ORDER_DESTINATION_PAGE;

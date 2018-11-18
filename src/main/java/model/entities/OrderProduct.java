@@ -15,7 +15,7 @@ public class OrderProduct implements Identified {
     private int quantity;
     private long productSum;
 
-    public OrderProduct(int id, int orderId, int productId, int quantity, long productSum) {
+    private OrderProduct(int id, int orderId, int productId, int quantity, long productSum) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
@@ -25,6 +25,44 @@ public class OrderProduct implements Identified {
 
     public static OrderProductBuilder builder() {
         return new OrderProductBuilder();
+    }
+
+    public static class OrderProductBuilder {
+
+        private int id;
+        private int orderId;
+        private int productId;
+        private int quantity;
+        private long productSum;
+
+        public OrderProductBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public OrderProductBuilder setOrderId(int orderId) {
+            this.orderId = orderId;
+            return this;
+        }
+
+        public OrderProductBuilder setProductId(int productId) {
+            this.productId = productId;
+            return this;
+        }
+
+        public OrderProductBuilder setQuantity(int quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public OrderProductBuilder setProductSum(long productSum) {
+            this.productSum = productSum;
+            return this;
+        }
+
+        public OrderProduct build() {
+            return new OrderProduct(id, orderId, productId, quantity, productSum);
+        }
     }
 
 

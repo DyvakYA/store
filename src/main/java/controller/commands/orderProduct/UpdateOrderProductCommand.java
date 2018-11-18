@@ -36,7 +36,7 @@ public class UpdateOrderProductCommand implements Command {
 
         request.setAttribute(ORDER_PRODUCTS_LIST_ATTRIBUTE, orderProductsService.getAll());
 
-        String message = Localization.getInstance().getLocalizedMessage(request, UPDATE_ORDER_PRODUCTS_SUCCESSFUL_MSG);
+        String message = Localization.getLocalizedMessage(request, UPDATE_ORDER_PRODUCTS_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return ORDER_PRODUCT_DESTINATION_PAGE;

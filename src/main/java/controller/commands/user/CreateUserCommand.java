@@ -38,7 +38,7 @@ public class CreateUserCommand implements Command {
 
         request.setAttribute(USERS_LIST_ATTRIBUTE, userService.getAll());
 
-        String message = Localization.getInstance().getLocalizedMessage(request, CREATE_USER_SUCCESSFUL_MSG);
+        String message = Localization.getLocalizedMessage(request, CREATE_USER_SUCCESSFUL_MSG);
         request.setAttribute(RESULT_ATTRIBUTE, message);
 
         return RespondFactory.builder()

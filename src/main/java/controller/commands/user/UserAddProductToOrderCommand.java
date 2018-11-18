@@ -55,7 +55,7 @@ public class UserAddProductToOrderCommand implements Command {
         if (user == null) {
             //set error message when user = null
             request.setAttribute(RESULT_ATTRIBUTE,
-                    Localization.getInstance().getLocalizedMessage
+                    Localization.getLocalizedMessage
                             (request, USER_NOT_AUTHORIZED));
 
             request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
@@ -69,7 +69,7 @@ public class UserAddProductToOrderCommand implements Command {
         } else if (user.isBlocked()) {
             //set error message when user = null
             request.setAttribute(RESULT_ATTRIBUTE,
-                    Localization.getInstance().getLocalizedMessage
+                    Localization.getLocalizedMessage
                             (request, ACCESS_DENIED));
             return INDEX;
         } else {
@@ -83,7 +83,7 @@ public class UserAddProductToOrderCommand implements Command {
                 session.setAttribute(ORDER_ID_ATTRIBUTE, orderId);
                 //create UserOrder + OrderProduct
                 orderProductService.createUserOrderAndOrderProduct(userId, orderId, productId, quantity);
-                request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
+                request.setAttribute(RESULT_ATTRIBUTE, Localization
                         .getLocalizedMessage(request, CREATE_USER_ORDER_SUCCESSFUL_MSG));
             } else if (session.getAttribute(ORDER_ID_ATTRIBUTE) != null) {
                 orderId = Integer.parseInt(String.valueOf(session.getAttribute(ORDER_ID_ATTRIBUTE)));
@@ -111,7 +111,7 @@ public class UserAddProductToOrderCommand implements Command {
         if (orderProductFromBase.isPresent()) {
             OrderProduct orderProduct = orderProductFromBase.get();
             orderProductService.increaseQuantityWhenAddProduct(orderProduct, quantity);
-            request.setAttribute(RESULT_ATTRIBUTE, Localization.getInstance()
+            request.setAttribute(RESULT_ATTRIBUTE, Localization
                     .getLocalizedMessage(request, AMOUNT_INCREASED));
             //action when orderProduct not exist in base
         }
@@ -125,7 +125,7 @@ public class UserAddProductToOrderCommand implements Command {
             orderProductService.create(orderProduct);
 
             //set message about successful creation userOrder
-            String message = Localization.getInstance().getLocalizedMessage(request, CREATE_USER_ORDER_SUCCESSFUL_MSG);
+            String message = Localization.getLocalizedMessage(request, CREATE_USER_ORDER_SUCCESSFUL_MSG);
             request.setAttribute(RESULT_ATTRIBUTE, message);
         }
     }

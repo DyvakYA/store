@@ -1,8 +1,5 @@
 package model.services.service;
 
-import model.dao.OrderProductDao;
-import model.dao.UserDao;
-import model.dao.UserOrderDao;
 import model.dao.daofactory.DaoManager;
 import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Order;
@@ -24,8 +21,11 @@ import static model.services.exception.ServiceException.USER_ALREADY_EXISTS;
 public class UserServiceImpl implements UserService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
+    private DaoManager daoManager = JdbcDaoManager.getInstance();
 
-    private DaoManager daoManager = new JdbcDaoManager();
+    private UserServiceImpl(){
+
+    }
 
     private static class Holder {
         static final UserServiceImpl INSTANCE = new UserServiceImpl();
@@ -36,17 +36,17 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<User> login(String email, String password) {
-        return transactionHandler.runWithOutCommit(connection -> {
+        return transactionHandler.runWithReturnStatement(connection -> {
             daoManager
                     .createUserDao()
                     .getUserByEmail(email)
-                    .filter(user -> (user.calcPasswordHash(password)).equals(user.getPasswordHash()))
+                    .filter(user -> (user.calcPasswordHash(password)).equals(user.getPassword()))
                     .orElseThrow(() -> new ServiceException(USER_ALREADY_EXISTS));
         });
     }
 
     public List<User> getAll() {
-        return (List<User>) transactionHandler.runWithReturnStatement(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager
                     .createUserDao()
                     .findAll();
@@ -56,52 +56,68 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getAllUsersWithOrders() {
 
-        return transactionHandler.runWithOutCommit(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager
                     .createUserDao()
-                    .findAllUsersWithOrder();
+                    .findAllUsersWithOrders();
         });
     }
 
     public Optional<User> getByEmail(String email) {
 
-        return transactionHandler.runWithOutCommit(connection -> {
-            daoManager.createUserDao().getUserByEmail();
+        return transactionHandler.runWithReturnStatement(connection -> {
+            daoManager.createUserDao().getUserByEmail(email);
         });
     }
 
     public Optional<User> getById(int id) {
 
-        return transactionHandler.runWithOutCommit(connection -> {
+        return transactionHandler.runWithReturnStatement(connection -> {
             daoManager.createUserDao().findOne(id);
         });
     }
 
-    public Map<User, Map<Order, Map<OrderProduct, Product>>> getUserMap(List<User> userList) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            UserOrderDao userOrderDao = daoFactory.createUserOrderDao(connection);
-            Map<User, Map<Order, Map<OrderProduct, Product>>> userMap = new HashMap<>();
-            for (User user : userList) {
-                List<Order> ordersList = userOrderDao.findAllOrdersForUser(user.getId());
+    public Map<User, Map<Order, Map<OrderProduct, Product>>> getUserMap(List<User> users) {
+
+        Map<User, Map<Order, Map<OrderProduct, Product>>> result = new HashMap<>();
+
+        transactionHandler.runWithOutCommit(connection -> {
+
+            for (User user : users) {
+
+                List<Order> orders = daoManager
+                        .createUserOrderDao()
+                        .findAllOrdersForUser(user.getId());
+
                 Map<Order, Map<OrderProduct, Product>> orderMap = new HashMap<>();
-                for (Order order : ordersList) {
-                    List<OrderProduct> orderProductList = orderProductDao.findOrderProductsByOrderId(order.getId());
+
+                for (Order order : orders) {
+                    List<OrderProduct> orderProducts = daoManager
+                            .createOrderProductDao()
+                            .findOrderProductsByOrderId(order.getId());
+
                     Map<OrderProduct, Product> orderProductMap = new HashMap<>();
-                    for (OrderProduct orderProduct : orderProductList) {
-                        Optional<Product> optionalProduct = orderProductDao.findProductByOrderProductId(orderProduct.getId());
+
+                    for (OrderProduct orderProduct : orderProducts) {
+
+                        Optional<Product> optionalProduct = daoManager
+                                .createOrderProductDao()
+                                .findProductByOrderProductId(orderProduct.getId());
+
                         if (optionalProduct.isPresent()) {
                             Product product = optionalProduct.get();
                             orderProductMap.put(orderProduct, product);
                         }
                     }
+
                     orderMap.put(order, orderProductMap);
+
+
                 }
-                userMap.put(user, orderMap);
+                result.put(user, orderMap);
             }
-            return userMap;
-        }
+        });
+        return result;
     }
 
     public void create(User user) {
@@ -128,11 +144,5 @@ public class UserServiceImpl implements UserService {
                     .createUserDao()
                     .delete(id);
         });
-    }
-
-    private void checkIfUserAlreadyExists(String email, UserDao userDao) {
-        if (userDao.getUserByEmail(email).isPresent()) {
-            throw new ServiceException(USER_ALREADY_EXISTS);
-        }
     }
 }

@@ -1,8 +1,5 @@
 package model.services.service;
 
-import model.dao.OrderDao;
-import model.dao.OrderProductDao;
-import model.dao.connection.DaoConnection;
 import model.dao.daofactory.DaoManager;
 import model.dao.daofactory.JdbcDaoManager;
 import model.entities.Order;
@@ -23,20 +20,23 @@ import java.util.Optional;
  */
 public class OrderProductServiceImpl implements OrderProductService {
 
+    private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
+    private DaoManager daoManager = JdbcDaoManager.getInstance();
+
+    private OrderProductServiceImpl(){
+
+    }
+
     private static class Holder {
         static final OrderProductServiceImpl INSTANCE = new OrderProductServiceImpl();
     }
-
-    private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
-
-    private DaoManager daoManager = new JdbcDaoManager();
 
     public static OrderProductServiceImpl getInstance() {
         return Holder.INSTANCE;
     }
 
     public List<OrderProduct> getAll() {
-        return (List<OrderProduct>) transactionHandler.runWithReturnStatement(connection -> {
+        return transactionHandler.runWithListReturning(connection -> {
             daoManager
                     .createOrderProductDao()
                     .findAll();
@@ -51,7 +51,10 @@ public class OrderProductServiceImpl implements OrderProductService {
                     .setUserId(userId)
                     .setOrderId(orderId)
                     .build();
-            daoManager.createUserOrderDao().create(userOrder);
+
+            daoManager
+                    .createUserOrderDao()
+                    .create(userOrder);
 
             OrderProduct orderProduct = OrderProduct.builder()
                     .setOrderId(orderId)
@@ -63,64 +66,67 @@ public class OrderProductServiceImpl implements OrderProductService {
                     .createOrderProductDao()
                     .getProductPrice(orderProduct);
 
-            orderProduct.setProductSum((long) orderProduct.getQuantity() *
-                    productPrice);
+            long orderProductQuantity = orderProduct.getQuantity();
+            orderProduct.setProductSum(orderProductQuantity * productPrice);
 
             daoManager
                     .createOrderProductDao()
                     .create(orderProduct);
-
-
             //setOrderTotalPrice(orderProduct, connection, orderProductDao);
         });
     }
 
     public void create(OrderProduct orderProduct) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            orderProduct.setProductSum((long) orderProduct.getQuantity() *
-                    orderProductDao.getProductPrice(orderProduct));
-            orderProductDao.create(orderProduct);
-            setOrderTotalPrice(orderProduct, connection, orderProductDao);
-            connection.commitTransaction();
 
+        transactionHandler.runInTransaction(connection -> {
 
-        }
+            long productPrice = daoManager
+                    .createOrderProductDao()
+                    .getProductPrice(orderProduct);
+
+            long orderProductQuantity = orderProduct.getQuantity();
+            orderProduct.setProductSum(orderProductQuantity * productPrice);
+
+            daoManager
+                    .createOrderProductDao()
+                    .create(orderProduct);
+
+            Optional<Order> optionalOrder = daoManager
+                    .createOrderProductDao()
+                    .findOrderByOrderProductId(orderProduct.getId());
+
+            if (optionalOrder.isPresent()) {
+                Order order = optionalOrder.get();
+                daoManager.createOrderProductDao().getOrderTotalPrice(order);
+                daoManager.createOrderDao().update(order);
+            }
+        });
     }
 
     public void increaseQuantityWhenAddProduct(OrderProduct orderProduct, int quantity) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
+
+        transactionHandler.runInTransaction(connection -> {
             orderProduct.setQuantity(orderProduct.getQuantity() + quantity);
-            orderProduct.setProductSum((long) orderProduct.getQuantity() * orderProductDao.getProductPrice(orderProduct));
-            orderProductDao.update(orderProduct, orderProduct.getId());
-            setOrderTotalPrice(orderProduct, connection, orderProductDao);
-            connection.commitTransaction();
-        }
+            long productPrice = daoManager.createOrderProductDao().getProductPrice(orderProduct);
+            orderProduct.setProductSum((long) orderProduct.getQuantity() * productPrice);
+            daoManager.createOrderProductDao().update(orderProduct);
+            Optional<Order> optionalOrder = daoManager.createOrderProductDao().findOrderByOrderProductId(orderProduct.getId());
+            if (optionalOrder.isPresent()) {
+                Order order = optionalOrder.get();
+                daoManager.createOrderProductDao().getOrderTotalPrice(order);
+                daoManager.createOrderDao().update(order);
+            }
+        });
     }
 
     public void update(OrderProduct orderProduct) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            orderProduct.setProductSum((long) orderProduct.getQuantity() * orderProductDao.getProductPrice(orderProduct));
-            orderProductDao.update(orderProduct, orderProduct.getId());
-            setOrderTotalPrice(orderProduct, connection, orderProductDao);
-            connection.commitTransaction();
-        }
-    }
 
-    private void setOrderTotalPrice(OrderProduct orderProduct, DaoConnection connection, OrderProductDao orderProductDao) {
-        Optional<Order> optionalOrder = orderProductDao.findOrderByOrderProductId(orderProduct.getId());
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            order.setTotalPrice(orderProductDao.getOrderTotalPrice(order));
-            OrderDao orderDao = daoFactory.createOrderDao(connection);
-            orderDao.update(order, order.getId());
-        }
-
+        transactionHandler.runInTransaction(connection -> {
+            long quantity = orderProduct.getQuantity();
+            long productPrice = daoManager.createOrderProductDao().getProductPrice(orderProduct);
+            orderProduct.setProductSum(quantity * productPrice);
+            daoManager.createOrderProductDao().update(orderProduct);
+        });
     }
 
     public void delete(int id) {
@@ -131,61 +137,76 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     public Optional<OrderProduct> findById(int id) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            return orderProductDao.findById(id);
-        }
+        return transactionHandler.runWithReturnStatement(connecton -> {
+            daoManager.createOrderProductDao().findOne(id);
+        });
     }
 
     public Optional<OrderProduct> getOrderProductByOrderIdAndProductId(int orderId, int productId) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            return orderProductDao.findOrderProductByOrderIdAndProductId(orderId, productId);
-        }
+
+        return transactionHandler.runWithReturnStatement(connection -> {
+            daoManager.createOrderProductDao().findOrderProductByOrderIdAndProductId(orderId, productId);
+        });
     }
 
     public void deleteProductFromOrder(int orderId, int productId) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
+
+        transactionHandler.runInTransaction(connection -> {
+
+            Optional<OrderProduct> optionalOrderProduct = daoManager
+                    .createOrderProductDao()
+                    .findOrderProductByOrderIdAndProductId(orderId, productId);
+
             OrderProduct orderProduct = null;
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            Optional<OrderProduct> optionalOrderProduct = orderProductDao.findOrderProductByOrderIdAndProductId(orderId, productId);
             if (optionalOrderProduct.isPresent()) {
                 orderProduct = optionalOrderProduct.get();
             }
-            Optional<Order> optionalOrder = orderProductDao.findOrderByOrderProductId(orderProduct.getId());
-            orderProductDao.deleteProductFromOrder(orderId, productId);
+
+            int orderProductId = orderProduct.getId();
+            Optional<Order> optionalOrder = daoManager
+                    .createOrderProductDao()
+                    .findOrderByOrderProductId(orderProductId);
+
+            daoManager.createOrderProductDao().deleteProductFromOrder(orderId, productId);
+
             if (optionalOrder.isPresent()) {
                 Order order = optionalOrder.get();
-                order.setTotalPrice(orderProductDao.getOrderTotalPrice(order));
-                OrderDao orderDao = daoFactory.createOrderDao(connection);
-                orderDao.update(order, order.getId());
+                long orderTotalPrice = daoManager.createOrderProductDao().getOrderTotalPrice(order);
+                order.setTotalPrice(orderTotalPrice);
+                daoManager.createOrderDao().update(order);
             }
-            connection.commitTransaction();
-        }
+        });
     }
 
+
     public Map<Order, Map<OrderProduct, Product>> getOrdersMap(List<Order> orders) {
-        try (DaoConnection connection = daoFactory.getConnection()) {
-            connection.beginTransaction();
-            OrderProductDao orderProductDao = daoFactory.createOrderProductDao(connection);
-            Map<Order, Map<OrderProduct, Product>> orderMap = new HashMap<>();
+
+        Map<Order, Map<OrderProduct, Product>> result = new HashMap<>();
+
+        transactionHandler.runWithListReturning(connection -> {
+
             for (Order order : orders) {
-                List<OrderProduct> orderProductList = orderProductDao.findOrderProductsByOrderId(order.getId());
+
+                List<OrderProduct> orderProductList = daoManager
+                        .createOrderProductDao()
+                        .findOrderProductsByOrderId(order.getId());
+
                 Map<OrderProduct, Product> orderProductMap = new HashMap<>();
                 for (OrderProduct orderProduct : orderProductList) {
-                    Optional<Product> optionalProduct = orderProductDao.findProductByOrderProductId(orderProduct.getId());
+
+                    Optional<Product> optionalProduct = daoManager.createOrderProductDao()
+                            .findProductByOrderProductId(orderProduct.getId());
+
                     if (optionalProduct.isPresent()) {
                         Product product = optionalProduct.get();
                         orderProductMap.put(orderProduct, product);
                     }
 
                 }
-                orderMap.put(order, orderProductMap);
+                result.put(order, orderProductMap);
             }
-            return orderMap;
-        }
+        });
+        return result;
     }
 }
+

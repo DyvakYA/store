@@ -1,46 +1,57 @@
 package model.dao.daofactory;
 
-import model.dao.GenericDao;
+import model.dao.*;
 import model.dao.connection.DaoConnection;
 import model.dao.connection.DaoConnectionFactory;
 import model.dao.connection.JdbcDaoConnectionFactory;
-import model.entities.*;
 
 import java.sql.Connection;
 
-public class JdbcDaoManager implements DaoManager{
+public class JdbcDaoManager implements DaoManager {
+
+    private JdbcDaoManager() {
+
+    }
 
     private DaoFactory daoFactory = DaoFactory.getInstance();
 
+    private static class Holder {
+        static final JdbcDaoManager INSTANCE = new JdbcDaoManager();
+    }
+
+    public static JdbcDaoManager getInstance() {
+        return JdbcDaoManager.Holder.INSTANCE;
+    }
+
     private DaoConnectionFactory connectionFactory = new JdbcDaoConnectionFactory();
 
-    public GenericDao<Product> createProductDao() {
+    public ProductDao createProductDao() {
         DaoConnection daoConnection = connectionFactory.getDaoConnection();
         Connection connection = daoConnection.getConnection();
         return daoFactory.createProductDao(connection);
     }
 
 
-    public GenericDao<User> createUserDao() {
+    public UserDao createUserDao() {
         DaoConnection daoConnection = connectionFactory.getDaoConnection();
         Connection connection = daoConnection.getConnection();
         return daoFactory.createUserDao(connection);
     }
 
 
-    public GenericDao<Order> createOrderDao() {
+    public OrderDao createOrderDao() {
         DaoConnection daoConnection = connectionFactory.getDaoConnection();
         Connection connection = daoConnection.getConnection();
         return daoFactory.createOrderDao(connection);
     }
 
-    public GenericDao<OrderProduct> createOrderProductDao() {
+    public OrderProductDao createOrderProductDao() {
         DaoConnection daoConnection = connectionFactory.getDaoConnection();
         Connection connection = daoConnection.getConnection();
         return daoFactory.createOrderProductDao(connection);
     }
 
-    public GenericDao<UserOrder> createUserOrderDao() {
+    public UserOrderDao createUserOrderDao() {
         DaoConnection daoConnection = connectionFactory.getDaoConnection();
         Connection connection = daoConnection.getConnection();
         return daoFactory.createUserOrderDao(connection);
