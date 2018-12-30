@@ -1,13 +1,14 @@
 package model.dao.jdbc;
 
 import model.dao.GenericDao;
+import model.dao.OrderDao;
 import model.dao.connection.DaoConnection;
 import model.entities.Order;
 
 import java.sql.Connection;
 import java.util.List;
 
-public class JdbcOrderDaoImpl extends AbstractDao<Order> implements GenericDao<Order> {
+public class JdbcOrderDaoImpl extends AbstractDao<Order> implements OrderDao {
 
     private static String TABLE = "orders";
 
@@ -38,5 +39,10 @@ public class JdbcOrderDaoImpl extends AbstractDao<Order> implements GenericDao<O
     @Override
     public List<Order> findAll() {
         return null;
+    }
+
+    @Override
+    public void updateOrderStatus(Order order, int id) {
+
     }
 }

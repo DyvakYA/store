@@ -1,6 +1,7 @@
 package controller.commands.user;
 
 import controller.commands.Command;
+import controller.commands.pageconstructor.RespondFactory;
 import model.entities.User;
 import model.extras.Localization;
 import model.services.UserService;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import static model.constants.AttributesHolder.*;
 import static model.constants.ErrorMsgHolder.LOGIN_USER_ERROR_MSG;
 import static model.constants.MsgHolder.LOGIN_USER_SUCCESSFUL_MSG;
-import static model.constants.UrlHolder.*;
+import static model.constants.UrlHolder.INDEX;
 
 /**
  * This class represents login for User command.
@@ -45,7 +46,11 @@ public class LoginCommand implements Command {
                 logger.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
                 result = Localization.getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
                 request.getSession().setAttribute(USER_SESSION_ATTRIBUTE, user);
-                destinationPage = getDestinationPageByUserRole(user, request);
+                destinationPage = RespondFactory.builder()
+                        .request(request)
+                        .page("product")
+                        .build()
+                        .createPageFactory();
             } else {
                 result = Localization.getLocalizedMessage(request, LOGIN_USER_ERROR_MSG);
             }
@@ -54,12 +59,5 @@ public class LoginCommand implements Command {
         return destinationPage;
     }
 
-    private String getDestinationPageByUserRole(User user, HttpServletRequest request) {
-        if (user.isAdmin()) {
-            return roleCheckerSetAttributes(USER_JSP, request);
-        } else if (!user.isAdmin()) {
-            return roleCheckerSetAttributes(ORDER_JSP, request);
-        }
-        return null;
-    }
+
 }

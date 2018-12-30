@@ -1,4 +1,4 @@
-package testController;
+package module.testController;
 
 import controller.commands.Command;
 import controller.servlet.CommandHolder;

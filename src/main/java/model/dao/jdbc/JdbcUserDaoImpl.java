@@ -1,12 +1,14 @@
 package model.dao.jdbc;
 
 import model.dao.GenericDao;
+import model.dao.UserDao;
 import model.entities.User;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
-public class JdbcUserDaoImpl extends AbstractDao<User> implements GenericDao<User> {
+public class JdbcUserDaoImpl extends AbstractDao<User> implements UserDao {
 
     private static String TABLE = "users";
 
@@ -39,6 +41,21 @@ public class JdbcUserDaoImpl extends AbstractDao<User> implements GenericDao<Use
 
     @Override
     public List<User> findAll() {
+        return null;
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<User> findAllUsersWithOrders() {
+        return null;
+    }
+
+    @Override
+    public String getPasswordForUser(User user) {
         return null;
     }
 }

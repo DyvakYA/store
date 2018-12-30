@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%--<%@ page errorPage="/WEB-INF/error/errorPage.jsp" %>--%>
-<c:set var="ADD_TO_ORDER" value="<%=UrlHolder.ADD_TO_ORDER%>" />
+<c:set var="ADD_TO_ORDER" value="<%=UrlHolder.ADD_TO_ORDER%>"/>
 <jsp:include page="elem/head.jsp"/>
 <fmt:bundle basename="labels">
     <body>
@@ -31,11 +31,13 @@
                         <form method="get" action="/shop/findByPrice" class="navbar-form hidden-sm">
 
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="from" required="required" name="first">
+                                <input type="text" class="form-control" placeholder="from" required="required"
+                                       name="first">
                             </div>
 
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="until" required="required" name="second">
+                                <input type="text" class="form-control" placeholder="until" required="required"
+                                       name="second">
                             </div>
                             <button type="submit" class="btn btn-success btn-default">
                                 <i class="fa"><fmt:message key="FindByPrice"/></i>
@@ -65,10 +67,12 @@
                         <img src="http://placehold.it/600x340" alt="" class="img-responsive">
                         <div class="caption">
                             <form method="get" action="${ADD_TO_ORDER}">
-                            <h3><a href="">${products.name}</a></h3>
-                            <p>${products.description}</p>
-                            <h5><fmt:message key="Price"/><b> ${products.getRealPrice()} <fmt:message key="UAH"/></b><br>
-                                <fmt:message key="Quantity"/> <input type="text" value="1" name="quantity" size="5"></h5>
+                                <h3><a href="">${products.name}</a></h3>
+                                <p>${products.description}</p>
+                                <h5><fmt:message key="Price"/><b> ${products.getRealPrice()} <fmt:message
+                                        key="UAH"/></b><br>
+                                    <fmt:message key="Quantity"/> <input type="text" value="1" name="quantity" size="5">
+                                </h5>
                                 <INPUT TYPE=hidden NAME=product_id VALUE="${products.id}">
                                 <button type="submit" class="btn btn-success btn-default">
                                     <i class="fa"><fmt:message key="AddToOrder"/></i>

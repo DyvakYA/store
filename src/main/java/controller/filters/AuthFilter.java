@@ -18,13 +18,13 @@ import static model.constants.UrlHolder.*;
 
 public class AuthFilter implements Filter {
 
-    private static final Logger logger=Logger.getLogger(AuthFilter.class);
+    private static final Logger logger = Logger.getLogger(AuthFilter.class);
 
     /**
      * There is no need to implement the method
      */
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
@@ -32,8 +32,8 @@ public class AuthFilter implements Filter {
                          ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
 
-        HttpServletRequest request=(HttpServletRequest) servletRequest;
-        HttpServletResponse response=(HttpServletResponse) servletResponse;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         if (isAuthorize(request, response)) {
             filterChain.doFilter(request, response);
@@ -41,9 +41,9 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isAuthorize(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session=request.getSession();
-        User user=(User) session.getAttribute(USER_SESSION_ATTRIBUTE);
-        String uri=request.getRequestURI();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(USER_SESSION_ATTRIBUTE);
+        String uri = request.getRequestURI();
         if (user == null) {
             logger.info(USER_NOT_AUTHORIZED);
             request.setAttribute(RESULT_ATTRIBUTE,
@@ -51,7 +51,7 @@ public class AuthFilter implements Filter {
                             (request, USER_NOT_AUTHORIZED));
             request.getRequestDispatcher(INDEX).forward(request, response);
             return false;
-        }else if(isAdmin(user, uri) || (isUser(user, uri) || (user.isBlocked()))) {
+        } else if (isAdmin(user, uri) || (isUser(user, uri) || (user.isBlocked()))) {
             logger.info(ACCESS_DENIED);
             request.setAttribute(RESULT_ATTRIBUTE,
                     Localization.getLocalizedMessage
@@ -62,16 +62,16 @@ public class AuthFilter implements Filter {
         return true;
     }
 
-    private boolean isAdmin(User user, String uri){
+    private boolean isAdmin(User user, String uri) {
         return (user.isAdmin() && uri.startsWith(USER));
     }
 
-    private boolean isUser(User user, String uri){
+    private boolean isUser(User user, String uri) {
         return (!user.isAdmin() && uri.startsWith(ADMIN));
     }
 
     /**
-     *  There is no need to implement the method
+     * There is no need to implement the method
      */
     @Override
     public void destroy() {

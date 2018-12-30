@@ -51,9 +51,8 @@ public class MainController extends HttpServlet {
      */
     void processRequest(HttpServletRequest request, HttpServletResponse response) {
         try {
-            String method = getMethod(request);
             String commandKey = getMethod(request) + DELIMITER + getUri(request);
-            if (method.equals(POST)) {
+            if (POST.equals(getMethod(request))) {
                 commandKey = getMethod(request) + DELIMITER + request.getParameter(COMMAND_ATTRIBUTE);
             }
             Command command = commandHolder.findCommand(commandKey);

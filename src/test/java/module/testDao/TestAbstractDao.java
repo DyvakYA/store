@@ -1,4 +1,4 @@
-package testDao;
+package module.testDao;
 
 import model.dao.jdbc.AbstractDao;
 import model.dao.jdbc.JdbcProductDaoImpl;

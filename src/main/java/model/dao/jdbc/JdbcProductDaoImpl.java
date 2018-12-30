@@ -3,6 +3,7 @@ package model.dao.jdbc;
 
 
 import model.dao.GenericDao;
+import model.dao.ProductDao;
 import model.entities.Product;
 
 import java.sql.Connection;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by User on 5/25/2018.
  */
-public class JdbcProductDaoImpl extends AbstractDao<Product> implements GenericDao<Product> {
+public class JdbcProductDaoImpl extends AbstractDao<Product> implements ProductDao {
 
     private static String TABLE = "products";
 
@@ -42,6 +43,16 @@ public class JdbcProductDaoImpl extends AbstractDao<Product> implements GenericD
 
     @Override
     public List<Product> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<Product> findProductsByPrice(long first, long second) {
+        return null;
+    }
+
+    @Override
+    public List<Product> findProductsByName(String name) {
         return null;
     }
 }
