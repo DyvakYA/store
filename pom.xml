@@ -8,7 +8,7 @@
     <artifactId>e-commerce-store</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>e-commerce-store</name>
 
     <build>
