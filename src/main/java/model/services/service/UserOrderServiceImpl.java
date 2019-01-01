@@ -10,6 +10,7 @@ import model.services.transactions.TransactionHandlerImpl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Dyvak on 21.01.2017.
@@ -32,18 +33,20 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     public List<UserOrder> getAll() {
 
+        AtomicReference<List<UserOrder>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
-            return daoFactory.createUserOrderDao().findAll();
+            result.set(daoFactory.createUserOrderDao().findAll());
         });
-        return Collections.emptyList();
+        return result.get();
     }
 
     public List<Order> getOrdersForUser(int user) {
 
+        AtomicReference<List<Order>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
-            return daoFactory.createUserOrderDao().findAllOrdersForUser(user);
+            result.set(daoFactory.createUserOrderDao().findAllOrdersForUser(user));
         });
-        return Collections.emptyList();
+        return result.get();
     }
 
     public void create(UserOrder userOrder) {

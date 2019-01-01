@@ -39,9 +39,10 @@ public class ProductServiceImpl implements ProductService {
 
         log.info("Get all products (Service)");
 
-        AtomicReference<List<Product>> result = null;
+        AtomicReference<List<Product>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
             ProductDao dao = daoFactory.createProductDao();
+            log.info(dao.findAll());
             result.set(dao.findAll());
         });
         return result.get();
@@ -79,22 +80,24 @@ public class ProductServiceImpl implements ProductService {
         long first = (long) doubleFirst * 100;
         long second = (long) doubleSecond * 100;
 
+        AtomicReference<List<Product>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
-            return daoFactory
+            result.set(daoFactory
                     .createProductDao()
-                    .findProductsByPrice(first, second);
+                    .findProductsByPrice(first, second));
         });
-        return Collections.emptyList();
+        return result.get();
     }
 
     public List<Product> getProductsByName(String name) {
 
+        AtomicReference<List<Product>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
-            return daoFactory
+            result.set(daoFactory
                     .createProductDao()
-                    .findProductsByName(name);
+                    .findProductsByName(name));
         });
-        return Collections.emptyList();
+        return result.get();
     }
 
 }

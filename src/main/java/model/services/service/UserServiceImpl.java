@@ -12,6 +12,7 @@ import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static model.services.exception.ServiceException.USER_ALREADY_EXISTS;
 
@@ -43,23 +44,26 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> getAll() {
+
+        AtomicReference<List<User>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
-            return daoFactory
+            result.set(daoFactory
                     .createUserDao()
-                    .findAll();
+                    .findAll());
         });
-        return Collections.emptyList();
+        return result.get();
     }
 
 
     public List<User> getAllUsersWithOrders() {
 
+        AtomicReference<List<User>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
-            return daoFactory
+            result.set(daoFactory
                     .createUserDao()
-                    .findAllUsersWithOrders();
+                    .findAllUsersWithOrders());
         });
-        return Collections.emptyList();
+        return result.get();
     }
 
     public Optional<User> getByEmail(String email) {

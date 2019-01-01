@@ -11,6 +11,7 @@ import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Dyvak on 21.01.2017.
@@ -34,12 +35,13 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     public List<OrderProduct> getAll() {
+        AtomicReference<List<OrderProduct>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithListReturning(connection -> {
-            return daoFactory
+            result.set(daoFactory
                     .createOrderProductDao()
-                    .findAll();
+                    .findAll());
         });
-        return Collections.emptyList();
+        return result.get();
     }
 
     public void createUserOrderAndOrderProduct(int userId, int orderId, int productId, int quantity) {
