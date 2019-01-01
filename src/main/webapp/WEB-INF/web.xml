@@ -37,8 +37,8 @@
         <url-pattern>/shop/admin/*</url-pattern> <!-- either url-pattern or servlet-name is mandatory -->
         <url-pattern>/shop/user/*</url-pattern> <!-- either url-pattern or servlet-name is mandatory -->
     </filter-mapping>
-   <resource-ref>
 
+   <resource-ref>
         <description>Transport Pool</description>
         <res-ref-name>jdbc/mydb</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>

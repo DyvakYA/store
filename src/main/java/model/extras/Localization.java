@@ -9,8 +9,6 @@ import static model.constants.AttributesHolder.LOCALE_ATTRIBUTE;
 
 public class Localization {
 
-    public static final Localization instance = new Localization();
-
     private static final String MSG_PROPERTIES_BASE_PATH = "messages";
     private static final String LABEL_PROPERTIES_BASE_PATH = "labels";
     private static final String ERROR_MSG_PROPERTIES_BASE_PATH = "/error_messages";

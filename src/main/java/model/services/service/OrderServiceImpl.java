@@ -1,14 +1,16 @@
 package model.services.service;
 
-import model.dao.daofactory.DaoManager;
-import model.dao.daofactory.JdbcDaoManager;
+import model.dao.daofactory.DaoFactory;
+import model.dao.daofactory.JdbcDaoFactory;
 import model.entities.Order;
 import model.services.OrderService;
 import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static model.constants.AttributesHolder.STARTED;
 
@@ -18,7 +20,7 @@ import static model.constants.AttributesHolder.STARTED;
 public class OrderServiceImpl implements OrderService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
-    private DaoManager daoManager = JdbcDaoManager.getInstance();
+    private DaoFactory daoFactory = JdbcDaoFactory.getInstance();
 
 
     private OrderServiceImpl() {
@@ -34,9 +36,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public List<Order> getAll() {
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager.createOrderDao().findAll();
+        AtomicReference<List<Order>> result = new AtomicReference<>(Collections.emptyList());
+        transactionHandler.runWithListReturning(connection -> {
+            result.set(daoFactory.createOrderDao().findAll());
         });
+        return result.get();
     }
 
     public Order createDefaultOrder() {
@@ -46,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
                 .setDate(new Date())
                 .build();
         transactionHandler.runWithReturnStatement(connection -> {
-            daoManager.createOrderDao().create(order);
+            daoFactory.createOrderDao().create(order);
         });
         return order;
     }
@@ -55,13 +59,13 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrderStatus(Order order) {
 
         transactionHandler.runInTransaction(connection -> {
-            daoManager.createOrderDao().update(order);
+            daoFactory.createOrderDao().update(order);
         });
     }
 
     public void create(Order order) {
         transactionHandler.runInTransaction(connection -> {
-            daoManager
+            daoFactory
                     .createOrderDao()
                     .create(order);
         });
@@ -69,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
 
     public void update(Order order) {
         transactionHandler.runInTransaction(connection -> {
-            daoManager
+            daoFactory
                     .createOrderDao()
                     .update(order);
         });
@@ -77,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
     public void delete(int id) {
         transactionHandler.runWithOutCommit(connection -> {
-            daoManager
+            daoFactory
                     .createOrderDao()
                     .delete(id);
         });

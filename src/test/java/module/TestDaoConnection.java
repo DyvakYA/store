@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class TestDaoConnection {
 //    @Mock
 //    private Connection connection;

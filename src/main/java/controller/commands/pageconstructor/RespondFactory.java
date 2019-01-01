@@ -33,14 +33,13 @@ public class RespondFactory {
         session = request.getSession();
         user = (User) session.getAttribute(USER_SESSION_ATTRIBUTE);
         if (user == null) {
-
+            return page;
         } else if (user.isAdmin()) {
-
+            return "admin/" + page;
         } else if (!user.isAdmin()) {
-
+            return "user/" + page;
         } else {
             return "";
         }
-        return null;
     }
 }

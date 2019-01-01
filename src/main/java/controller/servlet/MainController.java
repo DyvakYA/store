@@ -52,16 +52,19 @@ public class MainController extends HttpServlet {
     void processRequest(HttpServletRequest request, HttpServletResponse response) {
         try {
             String commandKey = getMethod(request) + DELIMITER + getUri(request);
+            log.info(commandKey);
             if (POST.equals(getMethod(request))) {
                 commandKey = getMethod(request) + DELIMITER + request.getParameter(COMMAND_ATTRIBUTE);
             }
             Command command = commandHolder.findCommand(commandKey);
             String view = command.execute(request, response);
-            System.out.println(view);
+            log.info(view);
+            String path = null;
             if (!isRedirected(view)) {
-                String path = new StringBuffer("/WEB-INF").append(view).append(".jsp").toString();
+                path = new StringBuffer("/WEB-INF/").append(view).append(".jsp").toString();
                 request.getRequestDispatcher(path).forward(request, response);
             }
+            log.info(path);
         } catch (ServletException | IOException e) {
             try {
                 request.getRequestDispatcher("/error.jsp").forward(request, response);

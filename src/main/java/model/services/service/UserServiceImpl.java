@@ -1,7 +1,7 @@
 package model.services.service;
 
-import model.dao.daofactory.DaoManager;
-import model.dao.daofactory.JdbcDaoManager;
+import model.dao.daofactory.DaoFactory;
+import model.dao.daofactory.JdbcDaoFactory;
 import model.entities.Order;
 import model.entities.OrderProduct;
 import model.entities.Product;
@@ -11,19 +11,16 @@ import model.services.exception.ServiceException;
 import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static model.services.exception.ServiceException.USER_ALREADY_EXISTS;
 
 public class UserServiceImpl implements UserService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
-    private DaoManager daoManager = JdbcDaoManager.getInstance();
+    private DaoFactory daoFactory = JdbcDaoFactory.getInstance();
 
-    private UserServiceImpl(){
+    private UserServiceImpl() {
 
     }
 
@@ -37,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     public Optional<User> login(String email, String password) {
         return transactionHandler.runWithReturnStatement(connection -> {
-            daoManager
+            daoFactory
                     .createUserDao()
                     .getUserByEmail(email)
                     .filter(user -> (user.calcPasswordHash(password)).equals(user.getPassword()))
@@ -46,34 +43,36 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> getAll() {
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager
+        transactionHandler.runWithListReturning(connection -> {
+            return daoFactory
                     .createUserDao()
                     .findAll();
         });
+        return Collections.emptyList();
     }
 
 
     public List<User> getAllUsersWithOrders() {
 
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager
+        transactionHandler.runWithListReturning(connection -> {
+            return daoFactory
                     .createUserDao()
                     .findAllUsersWithOrders();
         });
+        return Collections.emptyList();
     }
 
     public Optional<User> getByEmail(String email) {
 
         return transactionHandler.runWithReturnStatement(connection -> {
-            daoManager.createUserDao().getUserByEmail(email);
+            daoFactory.createUserDao().getUserByEmail(email);
         });
     }
 
     public Optional<User> getById(int id) {
 
         return transactionHandler.runWithReturnStatement(connection -> {
-            daoManager.createUserDao().findOne(id);
+            daoFactory.createUserDao().findOne(id);
         });
     }
 
@@ -85,14 +84,14 @@ public class UserServiceImpl implements UserService {
 
             for (User user : users) {
 
-                List<Order> orders = daoManager
+                List<Order> orders = daoFactory
                         .createUserOrderDao()
                         .findAllOrdersForUser(user.getId());
 
                 Map<Order, Map<OrderProduct, Product>> orderMap = new HashMap<>();
 
                 for (Order order : orders) {
-                    List<OrderProduct> orderProducts = daoManager
+                    List<OrderProduct> orderProducts = daoFactory
                             .createOrderProductDao()
                             .findOrderProductsByOrderId(order.getId());
 
@@ -100,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
                     for (OrderProduct orderProduct : orderProducts) {
 
-                        Optional<Product> optionalProduct = daoManager
+                        Optional<Product> optionalProduct = daoFactory
                                 .createOrderProductDao()
                                 .findProductByOrderProductId(orderProduct.getId());
 
@@ -122,7 +121,7 @@ public class UserServiceImpl implements UserService {
 
     public void create(User user) {
         transactionHandler.runInTransaction(connection -> {
-            daoManager
+            daoFactory
                     .createUserDao()
                     .create(user);
         });
@@ -132,7 +131,7 @@ public class UserServiceImpl implements UserService {
     public void update(User user) {
 
         transactionHandler.runInTransaction(connection -> {
-            daoManager.createUserDao()
+            daoFactory.createUserDao()
                     .update(user);
         });
     }
@@ -140,7 +139,7 @@ public class UserServiceImpl implements UserService {
     public void delete(int id) {
 
         transactionHandler.runWithOutCommit(connection -> {
-            daoManager
+            daoFactory
                     .createUserDao()
                     .delete(id);
         });

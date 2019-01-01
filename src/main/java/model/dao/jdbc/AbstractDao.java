@@ -1,8 +1,10 @@
 package model.dao.jdbc;
 
 import model.dao.exception.DAOException;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
  * Created by User on 5/27/2018.
  */
 public abstract class AbstractDao<T> {
+
+    private static final Logger log = Logger.getLogger(AbstractDao.class);
 
     private final String ID = "id=?";
     private final String WHERE = " WHERE ";
@@ -28,6 +32,7 @@ public abstract class AbstractDao<T> {
     private final String table;
 
     public AbstractDao(Connection connection, String table) {
+        log.info("Connection = " + connection + " Table = " + table);
         this.connection = connection;
         this.table = table;
     }
@@ -39,14 +44,16 @@ public abstract class AbstractDao<T> {
                 try (ResultSet resultSet = st.executeQuery(SELECT + FROM + table)) {
                     ResultSetMetaData md = resultSet.getMetaData();
                     while (resultSet.next()) {
-                        T client = (T) cls.newInstance();
+                        T client = (T) cls.getDeclaredConstructor().newInstance();
                         objectConstructor(cls, resultSet, md, client);
                         result.add(client);
                     }
                 }
             }
             return result;
-        } catch (InstantiationException | IllegalAccessException | NoSuchFieldException | SQLException e) {
+        } catch (InstantiationException | IllegalAccessException |
+                NoSuchFieldException | SQLException |
+                NoSuchMethodException | InvocationTargetException e) {
             throw new DAOException(e);
         }
     }

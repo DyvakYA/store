@@ -8,7 +8,7 @@ import static org.mockito.Matchers.any;
 /**
  * Created by User on 4/24/2017.
  */
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class TestUserService {
 
 //    @Mock

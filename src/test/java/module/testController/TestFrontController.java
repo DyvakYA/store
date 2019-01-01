@@ -78,7 +78,7 @@ public class TestFrontController {
         when(commandHolder.findCommand("GET:path")).thenReturn(command);
         when(command.execute(request, response)).thenReturn("pagePost");
         controller.doGet(request, response);
-        verify(request).getRequestDispatcher("pagePost");
+        verify(request).getRequestDispatcher("/WEB-INF/pagePost.jsp");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class TestFrontController {
         when(commandHolder.findCommand("POST:path")).thenReturn(command);
         when(command.execute(request, response)).thenReturn("pagePost");
         controller.doPost(request, response);
-        verify(request).getRequestDispatcher("pagePost");
+        verify(request).getRequestDispatcher("/WEB-INF/pagePost.jsp");
     }
 
     @Test

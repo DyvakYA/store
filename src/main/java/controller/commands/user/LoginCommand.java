@@ -35,26 +35,31 @@ public class LoginCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        String result;
+        String result = null;
         String destinationPage = INDEX;
         String email = request.getParameter(USER_EMAIL_ATTRIBUTE);
         String password = request.getParameter(USER_AUTHENTICATE_ATTRIBUTE);
         if (email != null && password != null) {
             Optional<User> optionalUser = userService.login(email, password);
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                logger.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
-                result = Localization.getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
-                request.getSession().setAttribute(USER_SESSION_ATTRIBUTE, user);
-                destinationPage = RespondFactory.builder()
-                        .request(request)
-                        .page("product")
-                        .build()
-                        .createPageFactory();
+            System.out.println(optionalUser);
+            if (optionalUser != null) {
+                if (optionalUser.isPresent()) {
+                    User user = optionalUser.get();
+                    logger.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
+                    result = Localization.getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
+                    request.getSession().setAttribute(USER_SESSION_ATTRIBUTE, user);
+                    destinationPage = RespondFactory.builder()
+                            .request(request)
+                            .page("product")
+                            .build()
+                            .createPageFactory();
+                }
+
             } else {
                 result = Localization.getLocalizedMessage(request, LOGIN_USER_ERROR_MSG);
             }
             request.setAttribute(RESULT_ATTRIBUTE, result);
+
         }
         return destinationPage;
     }

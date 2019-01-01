@@ -1,14 +1,12 @@
 <Context>
-
-    <Resource name="jdbc/mydb"
-              auth="Container"
-              type="javax.sql.DataSource"
-              maxTotal="100"
-              minIdle="5"
-              maxWaitMillis="20000"
-              username="root"
+    <Resource name="jdbc/mydb" auth="Container" type="javax.sql.DataSource"
+              username="postgres"
               password="root"
-              driverClassName="com.mysql.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/mydb?useSSL=false"/>
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:5432/mydb"
+              maxTotal="60"
+              maxIdle="20"
+              validationQuery="select 1"/>
 
 </Context>
+

@@ -14,7 +14,11 @@ public class Product implements Identified {
     private String description;
     private long price;
 
-    private Product(int id, String name, String description, long price) {
+    public Product(){
+
+    }
+
+    public Product(int id, String name, String description, long price) {
         this.id = id;
         this.name = name;
         this.description = description;

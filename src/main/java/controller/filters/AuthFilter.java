@@ -40,7 +40,7 @@ public class AuthFilter implements Filter {
         }
     }
 
-    private boolean isAuthorize(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private boolean isAuthorize(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER_SESSION_ATTRIBUTE);
         String uri = request.getRequestURI();

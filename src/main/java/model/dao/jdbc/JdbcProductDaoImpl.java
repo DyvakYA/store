@@ -1,10 +1,9 @@
 package model.dao.jdbc;
 
 
-
-import model.dao.GenericDao;
 import model.dao.ProductDao;
 import model.entities.Product;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.util.List;
@@ -14,6 +13,8 @@ import java.util.List;
  * Created by User on 5/25/2018.
  */
 public class JdbcProductDaoImpl extends AbstractDao<Product> implements ProductDao {
+
+    private static final Logger log = Logger.getLogger(JdbcProductDaoImpl.class);
 
     private static String TABLE = "products";
 
@@ -43,7 +44,11 @@ public class JdbcProductDaoImpl extends AbstractDao<Product> implements ProductD
 
     @Override
     public List<Product> findAll() {
-        return null;
+        log.info("Get all products (Dao)");
+
+        List<Product> result = super.findAll(Product.class);
+        log.info(result);
+        return result;
     }
 
     @Override

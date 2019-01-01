@@ -1,13 +1,14 @@
 package model.services.service;
 
-import model.dao.daofactory.DaoManager;
-import model.dao.daofactory.JdbcDaoManager;
+import model.dao.daofactory.DaoFactory;
+import model.dao.daofactory.JdbcDaoFactory;
 import model.entities.Order;
 import model.entities.UserOrder;
 import model.services.UserOrderService;
 import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,9 +17,9 @@ import java.util.List;
 public class UserOrderServiceImpl implements UserOrderService {
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
-    private DaoManager daoManager = JdbcDaoManager.getInstance();
+    private DaoFactory daoFactory = JdbcDaoFactory.getInstance();
 
-    private UserOrderServiceImpl(){
+    private UserOrderServiceImpl() {
     }
 
     private static class Holder {
@@ -31,36 +32,38 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     public List<UserOrder> getAll() {
 
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager.createUserOrderDao().findAll();
+        transactionHandler.runWithListReturning(connection -> {
+            return daoFactory.createUserOrderDao().findAll();
         });
+        return Collections.emptyList();
     }
 
     public List<Order> getOrdersForUser(int user) {
 
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager.createUserOrderDao().findAllOrdersForUser(user);
+        transactionHandler.runWithListReturning(connection -> {
+            return daoFactory.createUserOrderDao().findAllOrdersForUser(user);
         });
+        return Collections.emptyList();
     }
 
     public void create(UserOrder userOrder) {
 
         transactionHandler.runInTransaction(connection -> {
-            daoManager.createUserOrderDao().create(userOrder);
+            daoFactory.createUserOrderDao().create(userOrder);
         });
     }
 
     public void update(UserOrder userOrder) {
 
         transactionHandler.runInTransaction(connection -> {
-            daoManager.createUserOrderDao().update(userOrder);
+            daoFactory.createUserOrderDao().update(userOrder);
         });
     }
 
     public void delete(int id) {
 
         transactionHandler.runInTransaction(connection -> {
-            daoManager.createUserOrderDao().delete(id);
+            daoFactory.createUserOrderDao().delete(id);
         });
     }
 }

@@ -1,23 +1,29 @@
 package model.services.service;
 
-import model.dao.daofactory.DaoManager;
-import model.dao.daofactory.JdbcDaoManager;
+import model.dao.ProductDao;
+import model.dao.daofactory.DaoFactory;
+import model.dao.daofactory.JdbcDaoFactory;
 import model.entities.Product;
 import model.services.ProductService;
 import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
+import org.apache.log4j.Logger;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Dyvak on 21.01.2017.
  */
 public class ProductServiceImpl implements ProductService {
 
-    private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
-    private DaoManager daoManager = JdbcDaoManager.getInstance();
+    private static final Logger log = Logger.getLogger(ProductServiceImpl.class);
 
-    private ProductServiceImpl(){
+    private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
+    private DaoFactory daoFactory = JdbcDaoFactory.getInstance();
+
+    private ProductServiceImpl() {
 
     }
 
@@ -31,16 +37,22 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getAll() {
 
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager
-                    .createProductDao()
-                    .findAll();
+        log.info("Get all products (Service)");
+
+        AtomicReference<List<Product>> result = null;
+        transactionHandler.runWithListReturning(connection -> {
+            ProductDao dao = daoFactory.createProductDao();
+            result.set(dao.findAll());
         });
+        return result.get();
     }
 
     public void create(Product product) {
+
+        log.info("create new product (Service)");
+
         transactionHandler.runInTransaction(connection -> {
-            daoManager
+            daoFactory
                     .createProductDao()
                     .create(product);
         });
@@ -48,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
 
     public void update(Product product) {
         transactionHandler.runInTransaction(connection -> {
-            daoManager
+            daoFactory
                     .createProductDao()
                     .update(product);
         });
@@ -56,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
 
     public void delete(int id) {
         transactionHandler.runWithOutCommit(connection -> {
-            daoManager
+            daoFactory
                     .createProductDao()
                     .delete(id);
         });
@@ -67,19 +79,22 @@ public class ProductServiceImpl implements ProductService {
         long first = (long) doubleFirst * 100;
         long second = (long) doubleSecond * 100;
 
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager
+        transactionHandler.runWithListReturning(connection -> {
+            return daoFactory
                     .createProductDao()
                     .findProductsByPrice(first, second);
         });
+        return Collections.emptyList();
     }
 
     public List<Product> getProductsByName(String name) {
 
-        return transactionHandler.runWithListReturning(connection -> {
-            daoManager
+        transactionHandler.runWithListReturning(connection -> {
+            return daoFactory
                     .createProductDao()
                     .findProductsByName(name);
         });
+        return Collections.emptyList();
     }
+
 }
