@@ -25,7 +25,7 @@ import static model.constants.UrlHolder.INDEX;
  */
 public class LoginCommand implements Command {
 
-    private static final Logger logger = Logger.getLogger(LoginCommand.class);
+    private static final Logger log = Logger.getLogger(LoginCommand.class);
 
     private static final String USER_LOGGED_IN = "%s id=%s LOGGED IN.";
 
@@ -39,13 +39,17 @@ public class LoginCommand implements Command {
         String destinationPage = INDEX;
         String email = request.getParameter(USER_EMAIL_ATTRIBUTE);
         String password = request.getParameter(USER_AUTHENTICATE_ATTRIBUTE);
+
+        log.info(email + " : " + password);
         if (email != null && password != null) {
             Optional<User> optionalUser = userService.login(email, password);
-            System.out.println(optionalUser);
+            log.info("Service return -  " + optionalUser);
+
+
             if (optionalUser != null) {
                 if (optionalUser.isPresent()) {
                     User user = optionalUser.get();
-                    logger.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
+                    log.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
                     result = Localization.getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
                     request.getSession().setAttribute(USER_SESSION_ATTRIBUTE, user);
                     destinationPage = RespondFactory.builder()
@@ -63,6 +67,4 @@ public class LoginCommand implements Command {
         }
         return destinationPage;
     }
-
-
 }

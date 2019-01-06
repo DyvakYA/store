@@ -54,6 +54,11 @@ public class User implements Identified {
         }
 
         public UserBuilder setPassword(String password) {
+            this.password = PasswordEncrypt.encryptPassword(password);
+            return this;
+        }
+
+        public UserBuilder setPasswordHash(String password) {
             this.password = password;
             return this;
         }
@@ -126,12 +131,12 @@ public class User implements Identified {
         return PasswordEncrypt.encryptPassword(password);
     }
 
-    public static Integer passwordEncryptor(String password) {
-        Integer seed = 131;
-        Integer hash = 12;
-        hash = seed * hash + password.hashCode();
-        return hash;
-    }
+//    public static Integer passwordEncryptor(String password) {
+//        Integer seed = 131;
+//        Integer hash = 12;
+//        hash = seed * hash + password.hashCode();
+//        return hash;
+//    }
 
     @Override
     public boolean equals(Object o) {

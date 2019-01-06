@@ -34,7 +34,7 @@ public class UserOrderServiceImpl implements UserOrderService {
     public List<UserOrder> getAll() {
 
         AtomicReference<List<UserOrder>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory.createUserOrderDao().findAll());
         });
         return result.get();
@@ -43,7 +43,7 @@ public class UserOrderServiceImpl implements UserOrderService {
     public List<Order> getOrdersForUser(int user) {
 
         AtomicReference<List<Order>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory.createUserOrderDao().findAllOrdersForUser(user));
         });
         return result.get();

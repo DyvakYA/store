@@ -7,6 +7,7 @@ import model.entities.Order;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
 public class JdbcOrderDaoImpl extends AbstractDao<Order> implements OrderDao {
 
@@ -32,7 +33,7 @@ public class JdbcOrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public Order findOne(long id) {
+    public Optional<Order> findOne(long id) {
         return null;
     }
 

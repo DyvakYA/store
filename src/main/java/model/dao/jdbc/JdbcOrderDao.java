@@ -7,6 +7,7 @@ import model.entities.Order;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static model.constants.ErrorMsgHolder.SQL_EXCEPTION;
 
@@ -104,7 +105,7 @@ public class JdbcOrderDao implements OrderDao {
     }
 
     @Override
-    public Order findOne(long id) {
+    public Optional<Order> findOne(long id) {
         return null;
     }
 }

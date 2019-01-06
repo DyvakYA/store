@@ -1,15 +1,7 @@
 <%@ page import="model.constants.UrlHolder" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 4/2/2017
-  Time: 10:22 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 
 <c:set var="LOCALE" value="<%=UrlHolder.LOCALE%>" />
 <c:set var="USER_PRODUCTS" value="<%=UrlHolder.USER_PRODUCTS%>" />
@@ -37,5 +29,4 @@
             </div>
         </div>
     </div>
-    <jsp:include page="../registration.jsp"/>
 </fmt:bundle>

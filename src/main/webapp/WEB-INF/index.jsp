@@ -13,23 +13,19 @@
         <jsp:include page="elem/admin-header.jsp"/>
     </c:if>
     <c:if test="${sessionScope.user.isAdmin() == false}">
-         <jsp:include page="elem/user-header.jsp"/>
+        <jsp:include page="elem/user-header.jsp"/>
     </c:if>
 </c:if>
 <fmt:bundle basename="labels">
-<div class="container">
-    <c:if test="${!empty result}">
-        <div class="alert alert-warning">
-            <c:out value="${result}"/>
-        </div>
-    </c:if>
-    <h3 class="text-center"><fmt:message key="Welcome"/></h3>
-    <h4 class="text-center"><fmt:message key="description"/></h4>
-</div>
-    <div style="min-height: 600px">
-
-
+    <div class="container" style="min-height: 80%">
+        <c:if test="${!empty result}">
+            <div class="alert alert-warning">
+                <c:out value="${result}"/>
+            </div>
+        </c:if>
+        <h3 class="text-center"><fmt:message key="Welcome"/></h3>
+        <h4 class="text-center"><fmt:message key="description"/></h4>
     </div>
-<jsp:include page="elem/footer.jsp"/>
-</body>
+    <jsp:include page="elem/footer.jsp"/>
+    </body>
 </fmt:bundle>

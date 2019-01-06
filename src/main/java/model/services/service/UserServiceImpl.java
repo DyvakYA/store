@@ -7,16 +7,17 @@ import model.entities.OrderProduct;
 import model.entities.Product;
 import model.entities.User;
 import model.services.UserService;
-import model.services.exception.ServiceException;
 import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static model.services.exception.ServiceException.USER_ALREADY_EXISTS;
 
 public class UserServiceImpl implements UserService {
+
+    private static final Logger log = Logger.getLogger(UserServiceImpl.class);
 
     private TransactionHandler transactionHandler = TransactionHandlerImpl.getInstance();
     private DaoFactory daoFactory = JdbcDaoFactory.getInstance();
@@ -34,19 +35,29 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<User> login(String email, String password) {
-        return transactionHandler.runWithReturnStatement(connection -> {
-            daoFactory
+
+        AtomicReference<Optional<User>> result = new AtomicReference<>(Optional.empty());
+        transactionHandler.runWithOutCommit(connection -> {
+
+            User superUser = daoFactory.createUserDao().getUserByEmail(email).get();
+            log.info("RESULT" + superUser.calcPasswordHash(password)+ " - " +superUser.getPassword());
+
+            log.info(daoFactory.createUserDao().getUserByEmail(email).filter(user -> (user.calcPasswordHash(password)).equals(user.getPassword())));
+
+            result.set(daoFactory
                     .createUserDao()
                     .getUserByEmail(email)
-                    .filter(user -> (user.calcPasswordHash(password)).equals(user.getPassword()))
-                    .orElseThrow(() -> new ServiceException(USER_ALREADY_EXISTS));
+                    .filter(user -> (user.calcPasswordHash(password)).equals(user.getPassword())));
+            // .orElseThrow(() -> new ServiceException(USER_ALREADY_EXISTS)));
         });
+        log.info(result.get());
+        return result.get();
     }
 
     public List<User> getAll() {
 
         AtomicReference<List<User>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory
                     .createUserDao()
                     .findAll());
@@ -58,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsersWithOrders() {
 
         AtomicReference<List<User>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory
                     .createUserDao()
                     .findAllUsersWithOrders());
@@ -67,17 +78,20 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<User> getByEmail(String email) {
-
-        return transactionHandler.runWithReturnStatement(connection -> {
-            daoFactory.createUserDao().getUserByEmail(email);
+        AtomicReference<Optional<User>> result = new AtomicReference<>(Optional.empty());
+        transactionHandler.runWithOutCommit(connection -> {
+            result.set(daoFactory.createUserDao().getUserByEmail(email));
         });
+        return result.get();
     }
 
     public Optional<User> getById(int id) {
 
-        return transactionHandler.runWithReturnStatement(connection -> {
-            daoFactory.createUserDao().findOne(id);
+        AtomicReference<Optional<User>> result = new AtomicReference<>(Optional.empty());
+        transactionHandler.runInTransaction(connection -> {
+            result.set(daoFactory.createUserDao().findOne(id));
         });
+        return result.get();
     }
 
     public Map<User, Map<Order, Map<OrderProduct, Product>>> getUserMap(List<User> users) {

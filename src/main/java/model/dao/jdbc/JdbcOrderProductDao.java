@@ -210,7 +210,7 @@ public class JdbcOrderProductDao implements OrderProductDao {
     }
 
     @Override
-    public OrderProduct findOne(long id) {
+    public Optional<OrderProduct> findOne(long id) {
         return null;
     }
 

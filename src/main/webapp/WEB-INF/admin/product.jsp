@@ -3,10 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page errorPage="/WEB-INF/error/errorPage.jsp" %>
-<c:set var="ADMIN_GET_ALL_PRODUCTS" value="<%=UrlHolder.ADMIN_GET_ALL_PRODUCTS_POST%>" />
-<c:set var="ADMIN_CREATE_PRODUCT" value="<%=UrlHolder.ADMIN_CREATE_PRODUCT%>" />
-<c:set var="ADMIN_UPDATE_PRODUCT" value="<%=UrlHolder.ADMIN_UPDATE_PRODUCT%>" />
-<c:set var="ADMIN_DELETE_PRODUCT" value="<%=UrlHolder.ADMIN_DELETE_PRODUCT_POST%>" />
+<c:set var="ADMIN_GET_ALL_PRODUCTS" value="<%=UrlHolder.ADMIN_GET_ALL_PRODUCTS_POST%>"/>
+<c:set var="ADMIN_CREATE_PRODUCT" value="<%=UrlHolder.ADMIN_CREATE_PRODUCT%>"/>
+<c:set var="ADMIN_UPDATE_PRODUCT" value="<%=UrlHolder.ADMIN_UPDATE_PRODUCT%>"/>
+<c:set var="ADMIN_DELETE_PRODUCT" value="<%=UrlHolder.ADMIN_DELETE_PRODUCT_POST%>"/>
 <jsp:include page="../elem/head.jsp"/>
 <body>
 <jsp:include page="../elem/admin-header.jsp"/>
@@ -19,49 +19,52 @@
             </div>
         </c:if>
 
-            <div id="accordion" class="panel-group">
-                <div class="panel panel-success">
+        <div id="accordion" class="panel-group">
+            <div class="panel panel-success">
 
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a href="#collapse-1"
-                               data-parent="#accordion"
-                               data-toggle="collapse"><fmt:message key="Filter"/></a>
-                        </h4>
-                    </div>
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="#collapse-1"
+                           data-parent="#accordion"
+                           data-toggle="collapse"><fmt:message key="Filter"/></a>
+                    </h4>
+                </div>
 
-                    <div class="panel-collapse collapse" id="collapse-1">
-                        <div class="panel-body">
-                            <form method="get" action="/shop/findByPrice" class="navbar-form hidden-sm">
+                <div class="panel-collapse collapse" id="collapse-1">
+                    <div class="panel-body">
+                        <form method="get" action="/shop/findByPrice" class="navbar-form hidden-sm">
 
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="from" required="required" name="first">
-                                </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="from" required="required"
+                                       name="first">
+                            </div>
 
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="before" required="required" name="second">
-                                </div>
-                                <button type="submit" class="btn btn-success btn-default">
-                                    <i class="fa"><fmt:message key="FindByPrice"/></i>
-                                </button>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="before" required="required"
+                                       name="second">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-default">
+                                <i class="fa"><fmt:message key="FindByPrice"/></i>
+                            </button>
 
-                            </form>
+                        </form>
 
-                            <form method="get" action="/shop/findByName" class="navbar-form hidden-sm navbar-row">
+                        <form method="get" action="/shop/findByName" class="navbar-form hidden-sm navbar-row">
 
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="name" required="required" name="product_name">
-                                </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="name" required="required"
+                                       name="product_name">
+                            </div>
 
-                                <button type="submit" class="btn btn-success btn-default">
-                                    <i class="fa"><fmt:message key="FindByName"/></i>
-                                </button>
+                            <button type="submit" class="btn btn-success btn-default">
+                                <i class="fa"><fmt:message key="FindByName"/></i>
+                            </button>
 
-                            </form>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="row masonry" data-columns>
             <c:forEach var="products" items="${productsList}">
@@ -71,7 +74,8 @@
                         <div class="caption">
                             <h4><a href="">${products.id} ${products.name}</a></h4>
                             <p>${products.description}</p>
-                            <h5><fmt:message key="Price"/> <b>${products.getRealPrice()}<fmt:message key="UAH"/></b></h5>
+                            <h5><fmt:message key="Price"/> <b>${products.getRealPrice()}<fmt:message key="UAH"/></b>
+                            </h5>
                         </div>
                     </div>
                 </div>

@@ -9,7 +9,7 @@
 <body>
 <jsp:include page="../elem/user-header.jsp"/>
 
-<div class="container">
+<div class="container" style="min-height: 80%">
     <c:if test="${!empty result}">
         <div class="alert alert-warning">
             <c:out value="${result}"/>
@@ -82,7 +82,7 @@
         </c:forEach>
     </div>
 </div>
+
 <jsp:include page="../elem/footer.jsp"/>
 </body>
-</html>
 </fmt:bundle>

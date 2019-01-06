@@ -1,4 +1,4 @@
-# e-commerce-store
+## e-commerce-store
 [![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/DyvakYA/e-commerce-store/master/LICENSE.md)
 [![Build status](https://travis-ci.com/DyvakYA/e-commerce-store.svg?branch=master)](https://travis-ci.org/DyvakYA/e-commerce-store) 
 ![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)
@@ -22,6 +22,8 @@ Before you dive into the material, you should be familiar with various
 Programming/Software Design Principles.
  
 Please lead KISS, YAGNI, SOLID and DRY principles. This direction will make your code better.
+
+Deep understanding of Reflection API, Lambdas, Functional Interfaces, and Fluent Interfaces
 
 **What you’ll need**
  

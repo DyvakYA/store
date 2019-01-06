@@ -1,6 +1,7 @@
 package model.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by User on 5/27/2018.
@@ -13,7 +14,7 @@ public interface GenericDao<T> {
 
     void delete(long id);
 
-    T findOne(long id);
+    Optional<T> findOne(long id);
 
     List<T> findAll();
 }

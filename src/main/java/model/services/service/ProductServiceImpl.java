@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Get all products (Service)");
 
         AtomicReference<List<Product>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             ProductDao dao = daoFactory.createProductDao();
             log.info(dao.findAll());
             result.set(dao.findAll());
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
         long second = (long) doubleSecond * 100;
 
         AtomicReference<List<Product>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory
                     .createProductDao()
                     .findProductsByPrice(first, second));
@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsByName(String name) {
 
         AtomicReference<List<Product>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory
                     .createProductDao()
                     .findProductsByName(name));

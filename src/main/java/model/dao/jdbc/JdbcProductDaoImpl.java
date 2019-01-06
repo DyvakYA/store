@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -38,7 +39,7 @@ public class JdbcProductDaoImpl extends AbstractDao<Product> implements ProductD
     }
 
     @Override
-    public Product findOne(long id) {
+    public Optional<Product> findOne(long id) {
         return null;
     }
 

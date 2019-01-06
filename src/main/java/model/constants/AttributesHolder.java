@@ -22,8 +22,8 @@ public class AttributesHolder {
     public static final String USER_EMAIL_ATTRIBUTE = "email";
     public static final String USER_AUTHENTICATE_ATTRIBUTE= "password";
     public static final String CONFIRM_AUTHENTICATE_ATTRIBUTE= "confirmPassword";
-    public static final String USER_ADMIN_ATTRIBUTE = "isAdmin";
-    public static final String USER_BLOCKED_ATTRIBUTE = "isBlocked";
+    public static final String USER_ADMIN_ATTRIBUTE = "isadmin";
+    public static final String USER_BLOCKED_ATTRIBUTE = "isblocked";
     public static final String USER_ORDER_ID_ATTRIBUTE = "user_id";
 
     public static final String ORDER_PRODUCT_ID_ATTRIBUTE="order_product_id";

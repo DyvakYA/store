@@ -38,23 +38,6 @@ public class TransactionHandlerImpl implements TransactionHandler {
     public void runWithOutCommit(Transaction transaction) {
         try {
             try (DaoConnection dbConnection = connectionFactory.getConnection()) {
-                dbConnection.beginTransaction();
-                transaction.execute(dbConnection);
-            }
-        } catch (Exception e) {
-            throw new TransactionException(e);
-        }
-    }
-
-    @Override
-    public Optional runWithReturnStatement(Transaction transaction) {
-        return null;
-    }
-
-    @Override
-    public void  runWithListReturning(Transaction transaction) {
-        try {
-            try (DaoConnection dbConnection = connectionFactory.getConnection()) {
                 factory.setConnection(dbConnection.getConnection());
                 dbConnection.beginTransaction();
                 transaction.execute(dbConnection);
@@ -63,6 +46,4 @@ public class TransactionHandlerImpl implements TransactionHandler {
             throw new TransactionException(e);
         }
     }
-
-
 }

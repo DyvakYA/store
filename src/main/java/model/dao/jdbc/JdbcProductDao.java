@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static model.constants.ErrorMsgHolder.SQL_EXCEPTION;
 
@@ -111,7 +112,7 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public Product findOne(long id) {
+    public Optional<Product> findOne(long id) {
         return null;
     }
 

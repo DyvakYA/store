@@ -116,7 +116,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public User findOne(long id) {
+    public Optional<User> findOne(long id) {
         return null;
     }
 

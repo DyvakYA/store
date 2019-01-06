@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public abstract class AbstractDao<T> {
     private final String SET = " SET ";
     private final String VALUES = "VALUES";
 
-    private final Connection connection;
+    protected final Connection connection;
     private final String table;
 
     public AbstractDao(Connection connection, String table) {
@@ -41,11 +42,12 @@ public abstract class AbstractDao<T> {
         List<T> result = new ArrayList<>();
         try {
             try (Statement st = connection.createStatement()) {
-                try (ResultSet resultSet = st.executeQuery(SELECT + FROM + table)) {
-                    ResultSetMetaData md = resultSet.getMetaData();
-                    while (resultSet.next()) {
+                try (ResultSet query = st.executeQuery(SELECT + FROM + table)) {
+                    log.info(query);
+                    ResultSetMetaData md = query.getMetaData();
+                    while (query.next()) {
                         T client = (T) cls.getDeclaredConstructor().newInstance();
-                        objectConstructor(cls, resultSet, md, client);
+                        objectConstructor(cls, query, md, client);
                         result.add(client);
                     }
                 }
@@ -63,6 +65,7 @@ public abstract class AbstractDao<T> {
             T client = (T) cls.newInstance();
             try (PreparedStatement query = connection.prepareStatement(SELECT + FROM + table + WHERE + ID)) {
                 query.setLong(1, id);
+                log.info(query);
                 ResultSet resultSet = query.executeQuery();
                 ResultSetMetaData md = resultSet.getMetaData();
                 if (resultSet.next()) {
@@ -79,10 +82,23 @@ public abstract class AbstractDao<T> {
     public void create(Class<T> cls, T t) {
         try {
             Field[] fields = cls.getDeclaredFields();
-            String stringFields = toStringFields(fields);
-            String stringParameters = toStringCountParameters(fields);
+
+            //List<Field> list = Arrays.asList(fields);
+            //Field id = list.get(0);
+            //list.remove(id);
+            // list.remove(0);
+
+            LinkedList<Field> list = new LinkedList<>(Arrays.asList(fields));
+            list.removeFirst();
+
+            log.info(list);
+
+            String stringFields = toStringFields(list);
+            String stringParameters = toStringCountParameters(list);
             try (PreparedStatement query = connection.prepareStatement(INSERT_INTO + table + stringFields + VALUES + stringParameters)) {
-                setColumnsFromObject(t, query, fields);
+                log.info(query);
+                setColumnsFromObject(t, query, list);
+                log.info(query);
                 query.executeUpdate();
             }
         } catch (IllegalAccessException | SQLException e) {
@@ -92,10 +108,12 @@ public abstract class AbstractDao<T> {
 
     public void update(Class<T> cls, T t, long id) {
         Field[] fields = cls.getDeclaredFields();
-        String s = toStringFields(fields);
-        try (PreparedStatement query = connection.prepareStatement(UPDATE + table + SET + s + WHERE + ID)) {
+        LinkedList<Field> list = new LinkedList<>(Arrays.asList(fields));
+        String stringFields = toStringFields(list);
+        try (PreparedStatement query = connection.prepareStatement(UPDATE + table + SET + stringFields + WHERE + ID)) {
             query.setLong(1, id);
-            setColumnsFromObject(t, query, fields);
+            setColumnsFromObject(t, query, list);
+            log.info(query);
             query.executeUpdate();
         } catch (SQLException | IllegalAccessException e) {
             throw new DAOException(e);
@@ -105,6 +123,7 @@ public abstract class AbstractDao<T> {
     public void delete(long id) {
         try (PreparedStatement query = connection.prepareStatement(DELETE + FROM + table + WHERE + ID)) {
             query.setLong(1, id);
+            log.info(query);
             query.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -133,28 +152,31 @@ public abstract class AbstractDao<T> {
         }
     }
 
-    private void setColumnsFromObject(T t, PreparedStatement query, Field[] fields) throws SQLException, IllegalAccessException {
-        for (int i = 1; i < fields.length; i++) {
-            fields[i].setAccessible(true);
-            if (fields[i].getType().equals(long.class)) {
-                query.setLong(i, Long.valueOf(String.valueOf(fields[i].get(t))));
-            } else if (fields[i].getType().equals(int.class)) {
-                query.setInt(i, Integer.valueOf(String.valueOf(fields[i].get(t))));
+    private PreparedStatement setColumnsFromObject(T t, PreparedStatement query, List<Field> fields) throws SQLException, IllegalAccessException {
+        for (int i = 0; i < fields.size(); i++) {
+            fields.get(i).setAccessible(true);
+            if (fields.get(i).getType().equals(long.class)) {
+                query.setLong(i + 1, Long.valueOf(String.valueOf(fields.get(i).get(t))));
+            } else if (fields.get(i).getType().equals(int.class)) {
+                query.setInt(i + 1, Integer.valueOf(String.valueOf(fields.get(i).get(t))));
+            } else if (fields.get(i).getType().equals(boolean.class)) {
+                query.setBoolean(i + 1, Boolean.valueOf(String.valueOf(fields.get(i).get(t))));
             } else {
-                query.setString(i, String.valueOf(fields[i].get(t)));
+                query.setString(i + 1, String.valueOf(fields.get(i).get(t)));
             }
         }
+        return query;
     }
 
-    private String toStringFields(Field[] fields) {
-        return new StringBuilder("(").append(Arrays.stream(fields)
+    private String toStringFields(List<Field> fields) {
+        return new StringBuilder("(").append(fields.stream()
                 .map(s -> s.getName())
                 .collect(Collectors.joining(","))).append(")").toString();
     }
 
 
-    private String toStringCountParameters(Field[] fields) {
-        return new StringBuilder("(").append(Arrays.stream(fields)
+    private String toStringCountParameters(List<Field> fields) {
+        return new StringBuilder("(").append(fields.stream()
                 .map(s -> new String("?"))
                 .collect(Collectors.joining(","))).append(")").toString();
     }

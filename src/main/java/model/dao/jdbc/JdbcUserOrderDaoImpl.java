@@ -6,6 +6,7 @@ import model.entities.UserOrder;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
 public class JdbcUserOrderDaoImpl extends AbstractDao<UserOrder> implements UserOrderDao {
 
@@ -24,7 +25,7 @@ public class JdbcUserOrderDaoImpl extends AbstractDao<UserOrder> implements User
     }
 
     @Override
-    public UserOrder findOne(long id) {
+    public Optional<UserOrder> findOne(long id) {
         return null;
     }
 

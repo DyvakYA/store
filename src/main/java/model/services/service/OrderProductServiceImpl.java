@@ -10,7 +10,10 @@ import model.services.OrderProductService;
 import model.services.transactions.TransactionHandler;
 import model.services.transactions.TransactionHandlerImpl;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -36,7 +39,7 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     public List<OrderProduct> getAll() {
         AtomicReference<List<OrderProduct>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory
                     .createOrderProductDao()
                     .findAll());
@@ -138,16 +141,21 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     public Optional<OrderProduct> findById(int id) {
-        return transactionHandler.runWithReturnStatement(connecton -> {
-            daoFactory.createOrderProductDao().findOne(id);
+
+        AtomicReference<Optional<OrderProduct>> result = new AtomicReference<>(Optional.empty());
+        transactionHandler.runWithOutCommit(connection -> {
+            result.set(daoFactory.createOrderProductDao().findOne(id));
         });
+        return result.get();
     }
 
     public Optional<OrderProduct> getOrderProductByOrderIdAndProductId(int orderId, int productId) {
 
-        return transactionHandler.runWithReturnStatement(connection -> {
-            daoFactory.createOrderProductDao().findOrderProductByOrderIdAndProductId(orderId, productId);
+        AtomicReference<Optional<OrderProduct>> result = new AtomicReference<>(Optional.empty());
+        transactionHandler.runInTransaction(connection -> {
+            result.set(daoFactory.createOrderProductDao().findOrderProductByOrderIdAndProductId(orderId, productId));
         });
+        return result.get();
     }
 
     public void deleteProductFromOrder(int orderId, int productId) {

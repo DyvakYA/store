@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
     public List<Order> getAll() {
         AtomicReference<List<Order>> result = new AtomicReference<>(Collections.emptyList());
-        transactionHandler.runWithListReturning(connection -> {
+        transactionHandler.runWithOutCommit(connection -> {
             result.set(daoFactory.createOrderDao().findAll());
         });
         return result.get();
@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
                 .setOrderStatus(STARTED)
                 .setDate(new Date())
                 .build();
-        transactionHandler.runWithReturnStatement(connection -> {
+        transactionHandler.runInTransaction(connection -> {
             daoFactory.createOrderDao().create(order);
         });
         return order;

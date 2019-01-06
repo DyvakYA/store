@@ -28,7 +28,7 @@ public class JdbcOrderProductDaoImpl extends AbstractDao<OrderProduct> implement
     }
 
     @Override
-    public OrderProduct findOne(long id) {
+    public Optional<OrderProduct> findOne(long id) {
         return null;
     }
 

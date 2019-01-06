@@ -12,7 +12,7 @@ import static model.constants.AttributesHolder.*;
  */
 class ResultSetExtractor {
 
-    OrderProduct getOrderProductFromResultSet(ResultSet resultSet) throws SQLException {
+    protected static OrderProduct getOrderProductFromResultSet(ResultSet resultSet) throws SQLException {
         return OrderProduct.builder()
                 .setId(resultSet.getInt(ORDER_PRODUCT_ID_ATTRIBUTE))
                 .setOrderId(resultSet.getInt(ORDER_ID_ATTRIBUTE))
@@ -22,7 +22,7 @@ class ResultSetExtractor {
                 .build();
     }
 
-    Order getOrderFromResultSet(ResultSet resultSet) throws SQLException {
+    protected static Order getOrderFromResultSet(ResultSet resultSet) throws SQLException {
         return Order.builder()
                 .setId(resultSet.getInt(ORDER_ID_ATTRIBUTE))
                 .setOrderStatus(resultSet.getString(ORDER_STATUS_ATTRIBUTE))
@@ -31,7 +31,7 @@ class ResultSetExtractor {
                 .build();
     }
 
-    Product getProductFromResultSet(ResultSet resultSet) throws SQLException {
+    protected static Product getProductFromResultSet(ResultSet resultSet) throws SQLException {
         return Product.builder()
                 .setId(resultSet.getInt(PRODUCT_ID_ATTRIBUTE))
                 .setName(resultSet.getString(PRODUCT_NAME_ATTRIBUTE))
@@ -40,18 +40,18 @@ class ResultSetExtractor {
                 .build();
     }
 
-    User getUserFromResultSet(ResultSet resultSet) throws SQLException {
+    protected static User getUserFromResultSet(ResultSet resultSet) throws SQLException {
         return User.builder()
-                .setId(resultSet.getInt(USER_ID_ATTRIBUTE))
-                .setName(resultSet.getString(USER_NAME_ATTRIBUTE))
-                .setEmail(resultSet.getString(USER_EMAIL_ATTRIBUTE))
-                .setPassword(resultSet.getString(USER_AUTHENTICATE_ATTRIBUTE))
-                .setAdmin(resultSet.getBoolean(USER_ADMIN_ATTRIBUTE))
-                .setBlocked(resultSet.getBoolean(USER_BLOCKED_ATTRIBUTE))
+                .setId(resultSet.getInt("id"))
+                .setName(resultSet.getString("name"))
+                .setEmail(resultSet.getString("email"))
+                .setPasswordHash(resultSet.getString("password"))
+                .setAdmin(resultSet.getBoolean("isadmin"))
+                .setBlocked(resultSet.getBoolean("isblocked"))
                 .build();
     }
 
-    UserOrder getUserOrderFromResultSet(ResultSet resultSet) throws SQLException {
+    protected static UserOrder getUserOrderFromResultSet(ResultSet resultSet) throws SQLException {
         return UserOrder.builder()
                 .setUserId(resultSet.getInt(USER_ID_ATTRIBUTE))
                 .setOrderId(resultSet.getInt(ORDER_ID_ATTRIBUTE))
