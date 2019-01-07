@@ -41,6 +41,7 @@ public class CommandHolder {
         commands.put(GET + DELIMITER + LOGIN, new LoginCommand());
         commands.put(GET + DELIMITER + LOGOUT, new LogoutCommand());
         commands.put(GET + DELIMITER + PRODUCTS, new GetAllProductsCommand());
+        commands.put(GET + DELIMITER + "/home", new GetAllProductsCommand());
         commands.put(GET + DELIMITER + USER_PRODUCTS, new GetAllProductsCommand());
         commands.put(GET + DELIMITER + ADMIN_PRODUCTS, new GetAllProductsCommand());
         commands.put(GET + DELIMITER + ADMIN_DELETE_ORDER, new DeleteOrderCommand());

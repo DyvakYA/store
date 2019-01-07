@@ -18,6 +18,8 @@ are familiar with the patterns.
 If you want provide some manual testing welcome 
 [https://dyvak-e-commerce-store.herokuapp.com/](https://dyvak-e-commerce-store.herokuapp.com/)
 
+![chrome-capture 1](https://user-images.githubusercontent.com/20241892/50793241-326ccf00-12d0-11e9-96ef-23115b0e2700.gif)
+
 Before you dive into the material, you should be familiar with various
 Programming/Software Design Principles.
  

@@ -4,7 +4,9 @@ import controller.commands.Command;
 import controller.commands.pageconstructor.RespondFactory;
 import model.entities.User;
 import model.extras.Localization;
+import model.services.ProductService;
 import model.services.UserService;
+import model.services.service.ProductServiceImpl;
 import model.services.service.UserServiceImpl;
 import org.apache.log4j.Logger;
 
@@ -30,6 +32,7 @@ public class LoginCommand implements Command {
     private static final String USER_LOGGED_IN = "%s id=%s LOGGED IN.";
 
     private UserService userService = UserServiceImpl.getInstance();
+    private ProductService productService = ProductServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -52,6 +55,7 @@ public class LoginCommand implements Command {
                     log.info(String.format(USER_LOGGED_IN, user.getEmail(), user.getId()));
                     result = Localization.getLocalizedMessage(request, LOGIN_USER_SUCCESSFUL_MSG) + user.getEmail();
                     request.getSession().setAttribute(USER_SESSION_ATTRIBUTE, user);
+                    request.setAttribute(PRODUCTS_LIST_ATTRIBUTE, productService.getAll());
                     destinationPage = RespondFactory.builder()
                             .request(request)
                             .page("product")

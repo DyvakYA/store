@@ -8,7 +8,7 @@
 <fmt:bundle basename="labels">
     <body>
     <jsp:include page="elem/header.jsp"/>
-    <div class="container">
+    <div class="container" style="min-height: 80%">
         <c:if test="${!empty result}">
             <div class="alert alert-warning">
                 <c:out value="${result}"/>

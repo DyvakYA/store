@@ -46,10 +46,7 @@ public class JdbcProductDaoImpl extends AbstractDao<Product> implements ProductD
     @Override
     public List<Product> findAll() {
         log.info("Get all products (Dao)");
-
-        List<Product> result = super.findAll(Product.class);
-        log.info(result);
-        return result;
+        return super.findAll(Product.class);
     }
 
     @Override

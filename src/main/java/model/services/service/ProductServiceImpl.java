@@ -41,9 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
         AtomicReference<List<Product>> result = new AtomicReference<>(Collections.emptyList());
         transactionHandler.runWithOutCommit(connection -> {
-            ProductDao dao = daoFactory.createProductDao();
-            log.info(dao.findAll());
-            result.set(dao.findAll());
+            result.set(daoFactory.createProductDao().findAll());
         });
         return result.get();
     }

@@ -5,7 +5,10 @@
          version="3.1"
          metadata-complete="true">
 
-    <display-name>Login</display-name>
+    <display-name>e-commerce-store</display-name>
+    <welcome-file-list>
+        <welcome-file>/WEB-INF/index.jsp</welcome-file>
+    </welcome-file-list>
 
     <servlet>
         <servlet-name>MainController</servlet-name>
@@ -15,6 +18,7 @@
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/shop/*</url-pattern>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -45,14 +49,10 @@
         <res-auth>Container</res-auth>
     </resource-ref>
 
-    <welcome-file-list>
-        <welcome-file>/index.jsp</welcome-file>
-    </welcome-file-list>
-
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/index.jsp</location>
-    </error-page>
+    <!--<error-page>-->
+        <!--<error-code>404</error-code>-->
+        <!--<location>/WEB-INF/error/errorPage.jsp</location>-->
+    <!--</error-page>-->
 
     <jsp-config>
         <jsp-property-group>

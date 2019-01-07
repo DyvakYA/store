@@ -15,7 +15,7 @@
         <div class="container">
             <div class="collapse navbar-collapse" orderId="responsive-menu">
                 <ul class="nav navbar-nav">
-                    <li><a href="/index.jsp"><fmt:message key="Home"/></a></li>
+                    <li><a href="/home"><fmt:message key="Home"/></a></li>
                     <li><a href="${PRODUCTS}"><fmt:message key="Products"/></a></li>
                     <li><a href="${LOCALE}"><fmt:message key="ChangeLocale"/></a></li>
                 </ul>
